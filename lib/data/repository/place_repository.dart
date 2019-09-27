@@ -6,13 +6,13 @@ import 'package:built_collection/built_collection.dart';
 
 const _tag = "place_repository";
 
-class CategoryRepository {
+class PlaceRepository {
   final ApiService _apiService;
   final _categoriesSubject = BehaviorSubject<BuiltList<Category>>();
 
   Stream<BuiltList<Category>> get categoriesStream => _categoriesSubject;
 
-  CategoryRepository(this._apiService) {
+  PlaceRepository(this._apiService) {
     Log.d(_tag, "init category repository");
     _loadCategories();
   }

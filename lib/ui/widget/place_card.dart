@@ -32,8 +32,11 @@ class _PlaceCardState extends State<PlaceCard> {
       color: Color(rand.nextInt(0xFFFFFFFF)),
       child: Stack(
         children: <Widget>[
-          Center(
-            child: Text("${widget.x},${widget.y}"),
+          Container(
+            color: widget.active ? Colors.green : Colors.grey,
+            child: Center(
+              child: Text("${widget.x},${widget.y}"),
+            ),
           ),
           infoOverlay(),
         ],
