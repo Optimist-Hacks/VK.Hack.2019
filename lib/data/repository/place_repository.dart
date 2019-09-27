@@ -6,21 +6,21 @@ import 'package:built_collection/built_collection.dart';
 
 const _tag = "place_repository";
 
-class PlaceRepository {
+class CategoryRepository {
   final ApiService _apiService;
-  final _categorySubject = BehaviorSubject<BuiltList<Category>>();
+  final _categoriesSubject = BehaviorSubject<BuiltList<Category>>();
 
-  Stream<BuiltList<Category>> get categoryStream => _categorySubject;
+  Stream<BuiltList<Category>> get categoriesStream => _categoriesSubject;
 
-  PlaceRepository(this._apiService) {
-    Log.d(_tag, "init place repository");
-    _loadPlaces();
+  CategoryRepository(this._apiService) {
+    Log.d(_tag, "init category repository");
+    _loadCategories();
   }
 
-  Future<void> _loadPlaces() async {
-    Log.d(_tag, "Load places");
+  Future<void> _loadCategories() async {
+    Log.d(_tag, "Load categories");
     final places = await _apiService.getPlaces();
-    Log.d(_tag, "Load ${places.length} categories");
-    _categorySubject.add(places);
+    Log.d(_tag, "${places.length} categories retrieved");
+    _categoriesSubject.add(places);
   }
 }

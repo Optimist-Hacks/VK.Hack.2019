@@ -12,7 +12,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final apiService = ApiService();
-    final placeRepository = PlaceRepository(apiService);
+    final placeRepository = CategoryRepository(apiService);
     final placeBloc = PlaceBloc(placeRepository);
     final aviasalesService = AviasalesService();
     return MultiProvider(

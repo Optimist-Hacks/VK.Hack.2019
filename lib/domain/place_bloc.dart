@@ -7,9 +7,9 @@ import 'package:built_collection/built_collection.dart';
 const _tag = "place_bloc";
 
 class PlaceBloc {
-  final PlaceRepository _placeRepository;
+  final CategoryRepository _placeRepository;
 
-  Stream<BuiltList<Category>> get categoryStream => _placeRepository.categoryStream;
+  Stream<BuiltList<Category>> get categoryStream => _placeRepository.categoriesStream;
 
   PlaceBloc(this._placeRepository);
 }
