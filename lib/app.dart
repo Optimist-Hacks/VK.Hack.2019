@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_here/data/model/place.dart';
 import 'package:go_here/data/repository/place_repository.dart';
 import 'package:go_here/domain/place_bloc.dart';
 import 'package:go_here/service/api_service.dart';
@@ -29,7 +30,14 @@ class App extends StatelessWidget {
         ),
         routes: {
           MainPage.routeName: (context) => MainPage(),
-          PlacePage.routeName: (context) => PlacePage(),
+        },
+        onGenerateRoute: (settings) {
+          switch (settings.name) {
+            case PlacePage.routeName:
+              final Place place = settings.arguments;
+              return MaterialPageRoute(builder: (context) => PlacePage(place));
+          }
+          return null;
         },
         home: MainPage(),
       ),

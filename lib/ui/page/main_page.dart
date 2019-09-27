@@ -199,7 +199,7 @@ class _MainPageState extends State<MainPage> {
 
   _onPlaceTap(Place place) {
     Log.d(_tag, "On place tap $place");
-    Navigator.pushReplacementNamed(context, PlacePage.routeName);
+    Navigator.pushNamed(context, PlacePage.routeName, arguments: place);
   }
 
   int _getTopCategoryIndex(int categoriesLength) {
