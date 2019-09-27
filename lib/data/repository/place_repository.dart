@@ -8,9 +8,9 @@ const _tag = "place_repository";
 
 class PlaceRepository {
   final ApiService _apiService;
-  final _placeSubject = BehaviorSubject<BuiltList<Category>>();
+  final _categorySubject = BehaviorSubject<BuiltList<Category>>();
 
-  Stream<BuiltList<Category>> get placeStream => _placeSubject;
+  Stream<BuiltList<Category>> get categoryStream => _categorySubject;
 
   PlaceRepository(this._apiService) {
     Log.d(_tag, "init place repository");
@@ -21,6 +21,6 @@ class PlaceRepository {
     Log.d(_tag, "Load places");
     final places = await _apiService.getPlaces();
     Log.d(_tag, "Load ${places.length} categories");
-    _placeSubject.add(places);
+    _categorySubject.add(places);
   }
 }
