@@ -23,6 +23,15 @@ dev_dependencies:
   built_value: ^6.7.1
   build_runner: ^1.7.1
   built_value_generator: ^6.7.1
+  flutter_launcher_icons: ^0.7.3
 
 flutter:
   uses-material-design: true
+
+flutter_icons:
+  image_path_ios: icon/full_icon.png
+  image_path_android: icon/full_icon.png
+  adaptive_icon_background: icon/background.png
+  adaptive_icon_foreground: icon/full_icon.png
+  android: true
+  ios: true

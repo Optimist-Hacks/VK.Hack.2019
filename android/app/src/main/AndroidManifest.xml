@@ -7,7 +7,7 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:icon="@mipmap/ic_launcher"
-        android:label="go_here"
+        android:label="GoHere"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".MainActivity"
