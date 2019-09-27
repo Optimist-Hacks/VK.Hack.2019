@@ -5,6 +5,7 @@ import 'package:go_here/service/api_service.dart';
 import 'package:go_here/service/aviasales_service.dart';
 import 'package:go_here/ui/colors.dart';
 import 'package:go_here/ui/page/main_page.dart';
+import 'package:go_here/ui/page/place_page.dart';
 import 'package:go_here/ui/strings.dart';
 import 'package:provider/provider.dart';
 
@@ -29,6 +30,7 @@ class App extends StatelessWidget {
           ),
           routes: {
             MainPage.routeName: (context) => MainPage(),
+            PlacePage.routeName: (context) => PlacePage(),
           },
           home: MainPage(),
         ),

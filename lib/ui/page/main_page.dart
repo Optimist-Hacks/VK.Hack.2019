@@ -3,9 +3,14 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_here/data/model/category.dart';
+import 'package:go_here/data/model/place.dart';
 import 'package:go_here/domain/place_bloc.dart';
+import 'package:go_here/ui/page/place_page.dart';
 import 'package:go_here/ui/widget/place_card.dart';
+import 'package:go_here/utils/log.dart';
 import 'package:provider/provider.dart';
+
+const _tag = "main_page";
 
 class MainPage extends StatefulWidget {
   static const routeName = '/main';
@@ -73,5 +78,10 @@ class _MainPageState extends State<MainPage> {
         },
       )),
     );
+  }
+
+  _onPlaceTap(Place place) {
+    Log.d(_tag, "On place tap $place");
+    Navigator.pushReplacementNamed(context, PlacePage.routeName);
   }
 }

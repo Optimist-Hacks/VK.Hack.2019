@@ -1,8 +1,8 @@
-
 import 'package:flutter/material.dart';
-import 'package:go_here/ui/widget/place_card.dart';
 
 class PlacePage extends StatefulWidget {
+  static const routeName = '/place';
+
   @override
   _PlacePageState createState() => _PlacePageState();
 }
@@ -10,8 +10,6 @@ class PlacePage extends StatefulWidget {
 class _PlacePageState extends State<PlacePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-//      body: PlaceCard(0,0, true),
-    );
+    return Scaffold();
   }
 }
