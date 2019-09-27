@@ -18,6 +18,8 @@ abstract class Place implements Built<Place, PlaceBuilder> {
 
   String get video;
 
+  String get airport;
+
   Place._();
 
   factory Place([void Function(PlaceBuilder) updates]) = _$Place;
