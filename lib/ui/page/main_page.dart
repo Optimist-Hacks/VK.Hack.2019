@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_here/domain/place_bloc.dart';
+import 'package:provider/provider.dart';
 
 class MainPage extends StatefulWidget {
   static const routeName = '/main';
@@ -10,6 +12,14 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  PlaceBloc _placeBloc;
+
+  @override
+  void didChangeDependencies() {
+    _placeBloc ??= Provider.of<PlaceBloc>(context);
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;

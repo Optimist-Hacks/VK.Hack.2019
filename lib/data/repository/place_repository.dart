@@ -1,4 +1,4 @@
-import 'package:go_here/data/model/place.dart';
+import 'package:go_here/data/model/category.dart';
 import 'package:go_here/service/api_service.dart';
 import 'package:go_here/utils/log.dart';
 import 'package:rxdart/rxdart.dart';
@@ -8,9 +8,9 @@ const _tag = "place_repository";
 
 class PlaceRepository {
   final ApiService _apiService;
-  final _placeSubject = BehaviorSubject<BuiltList<Place>>();
+  final _placeSubject = BehaviorSubject<BuiltList<Category>>();
 
-  Stream<BuiltList<Place>> get placeStream => _placeSubject;
+  Stream<BuiltList<Category>> get placeStream => _placeSubject;
 
   PlaceRepository(this._apiService) {
     Log.d(_tag, "init place repository");
@@ -19,6 +19,8 @@ class PlaceRepository {
 
   Future<void> _loadPlaces() async {
     Log.d(_tag, "Load places");
-    _placeSubject.add(await _apiService.getPlaceList());
+    final places = await _apiService.getPlaces();
+    Log.d(_tag, "Load ${places.length} categories");
+    _placeSubject.add(places);
   }
 }

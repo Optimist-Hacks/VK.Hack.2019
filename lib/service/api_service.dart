@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:convert' show json;
 
-import 'package:go_here/data/model/place.dart';
+import 'package:go_here/data/model/category.dart';
 import 'package:go_here/data/serializer/serializers.dart';
 import 'package:go_here/utils/log.dart';
 import 'package:http/http.dart' as http;
 import 'package:built_collection/built_collection.dart';
 
 const _tag = "api_service";
-const _baseUrl = "api_service";
+const _baseUrl = "demo138.foxtrot.vkhackathon.com:8080";
 
 class HttpCode {
   static const OK = 200;
@@ -21,17 +21,17 @@ class ApiService {
 
   ApiService();
 
-  Future<BuiltList<Place>> getPlaceList() async {
+  Future<BuiltList<Category>> getPlaces() async {
     final jsonResponse = await _get('places');
     if (jsonResponse == null) {
       Log.e(_tag, "Response is null");
       return BuiltList();
     }
-    return deserializeListOf<Place>(jsonResponse);
+    return deserializeListOf<Category>(jsonResponse);
   }
 
   Future<dynamic> _get(String path, {Map<String, String> params}) async {
-    final uri = _buildUri("api/v1/$path", params: params);
+    final uri = _buildUri("$path", params: params);
     Log.d(_tag, "-> GET url = $uri, params = $params");
 
     final response = await _client
