@@ -28,10 +28,10 @@ class _MainPageState extends State<MainPage> {
 
   PlaceBloc _placeBloc;
   PageController categoriesController;
-  PageController placesController;
+  Map<int, PageController> placesControllers = {};
 
   final currentCategoryIndexSubject = BehaviorSubject<int>.seeded(0);
-  final currentPlaceIndexSubject = BehaviorSubject<int>.seeded(0);
+  final Map<int, BehaviorSubject<int>> currentPlaceIndexSubjects = {};
 
   @override
   void didChangeDependencies() {
@@ -70,14 +70,23 @@ class _MainPageState extends State<MainPage> {
 
                       final currentCategoryIndex = snapshot.data;
 
+                      currentPlaceIndexSubjects[y] ??=
+                          BehaviorSubject<int>.seeded(0);
+
+                      final initialPage =
+                          currentPlaceIndexSubjects[y].value == -1
+                              ? 0
+                              : currentPlaceIndexSubjects[y].value;
+
                       final placesCarousel = CarouselSlider(
                         viewportFraction: 0.875,
                         aspectRatio: width / height,
                         scrollDirection: Axis.horizontal,
+                        initialPage: initialPage,
                         items: [
                           for (int x = 0; x < categories[y].places.length; x++)
                             StreamBuilder<int>(
-                              stream: currentPlaceIndexSubject,
+                              stream: currentPlaceIndexSubjects[y],
                               builder: (context, snapshot) {
                                 if (!snapshot.hasData) {
                                   return Container();
@@ -85,15 +94,27 @@ class _MainPageState extends State<MainPage> {
 
                                 final currentPlaceIndex = snapshot.data;
 
+                                print(
+                                    "create card for $x,$y, ${_getBottomCategoryIndex(categories.length) == y}");
+
                                 return GestureDetector(
-                                  onTap: () => _onPlaceTap(categories[y].places[x]),
+                                  onTap: () =>
+                                      _onPlaceTap(categories[y].places[x]),
                                   child: PlaceCard(
-                                    x,
-                                    y,
-                                    categories[y].name,
-                                    categories[y].places[x],
-                                    currentCategoryIndex == y &&
+                                    x: x,
+                                    y: y,
+                                    categoryName: categories[y].name,
+                                    place: categories[y].places[x],
+                                    active: currentCategoryIndex == y &&
                                         currentPlaceIndex == x,
+                                    showBottomCategoryName:
+                                        _getTopCategoryIndex(
+                                                categories.length) ==
+                                            y,
+                                    showTopCategoryName:
+                                        _getBottomCategoryIndex(
+                                                categories.length) ==
+                                            y,
                                   ),
                                 );
                               },
@@ -101,12 +122,12 @@ class _MainPageState extends State<MainPage> {
                         ],
                       );
 
-                      placesController = placesCarousel.pageController;
+                      final placesController = placesCarousel.pageController;
+
+                      placesControllers[y] = placesController;
 
                       placesController.addListener(() {
                         final index = placesController.page;
-
-                        print("raw places index: $index");
 
                         double realIndex;
 
@@ -120,15 +141,20 @@ class _MainPageState extends State<MainPage> {
                         }
 
                         if (realIndex.floor() == realIndex) {
-                          currentPlaceIndexSubject.add(realIndex.floor());
+                          currentPlaceIndexSubjects[y].add(realIndex.floor());
                           placesMoving = false;
+
+                          print(
+                              "raw places index: $index, places index: $realIndex");
                         } else {
                           if (!placesMoving) {
                             placesMoving = true;
-                            currentPlaceIndexSubject.add(-1);
+                            currentPlaceIndexSubjects[y].add(-1);
+
+                            print(
+                                "raw places index: $index, places index: $realIndex");
                           }
                         }
-                        print("places index: $realIndex");
                       });
 
                       return placesCarousel;
@@ -140,8 +166,6 @@ class _MainPageState extends State<MainPage> {
 
           categoriesController.addListener(() {
             final index = categoriesController.page;
-
-            print("raw category index: $index");
 
             double realIndex;
 
@@ -155,13 +179,16 @@ class _MainPageState extends State<MainPage> {
             if (realIndex.floor() == realIndex) {
               currentCategoryIndexSubject.add(realIndex.floor());
               categoriesMoving = false;
+
+              print("raw category index: $index, category index: $realIndex");
             } else {
               if (!categoriesMoving) {
                 categoriesMoving = true;
                 currentCategoryIndexSubject.add(-1);
+
+                print("raw category index: $index, category index: $realIndex");
               }
             }
-            print("category index: $realIndex");
           });
 
           return categoriesCarousel;
@@ -173,5 +200,45 @@ class _MainPageState extends State<MainPage> {
   _onPlaceTap(Place place) {
     Log.d(_tag, "On place tap $place");
     Navigator.pushReplacementNamed(context, PlacePage.routeName);
+  }
+
+  int _getTopCategoryIndex(int categoriesLength) {
+    if (categoriesMoving) {
+      return -1;
+    }
+
+    final currentIndex = currentCategoryIndexSubject.value;
+
+    int topIndex = currentIndex - 1;
+
+    if (topIndex >= 0) {
+      topIndex = topIndex % categoriesLength;
+    } else {
+      topIndex = categoriesLength - (topIndex.abs()) % categoriesLength;
+    }
+
+    return topIndex;
+  }
+
+  int _getBottomCategoryIndex(int categoriesLength) {
+    if (categoriesMoving) {
+      return -1;
+    }
+
+    final currentIndex = currentCategoryIndexSubject.value;
+
+    print("raw category index: $currentIndex");
+
+    int bottomIndex = currentIndex + 1;
+
+    if (bottomIndex >= 0) {
+      bottomIndex = bottomIndex % categoriesLength;
+    } else {
+      bottomIndex = categoriesLength - (bottomIndex.abs()) % categoriesLength;
+    }
+
+    print("bottom category index: $currentIndex");
+
+    return bottomIndex;
   }
 }

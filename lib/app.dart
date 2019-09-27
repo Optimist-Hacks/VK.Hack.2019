@@ -21,19 +21,17 @@ class App extends StatelessWidget {
         Provider.value(value: placeBloc),
         Provider.value(value: aviasalesService),
       ],
-      child: Builder(
-        builder: (context) => MaterialApp(
-          title: Strings.appName,
-          theme: ThemeData(
-            canvasColor: Colors.transparent,
-            accentColor: GoColors.accent,
-          ),
-          routes: {
-            MainPage.routeName: (context) => MainPage(),
-            PlacePage.routeName: (context) => PlacePage(),
-          },
-          home: MainPage(),
+      child: MaterialApp(
+        title: Strings.appName,
+        theme: ThemeData(
+          canvasColor: Colors.transparent,
+          accentColor: GoColors.accent,
         ),
+        routes: {
+          MainPage.routeName: (context) => MainPage(),
+          PlacePage.routeName: (context) => PlacePage(),
+        },
+        home: MainPage(),
       ),
     );
   }

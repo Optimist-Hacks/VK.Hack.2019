@@ -14,10 +14,19 @@ class PlaceCard extends StatefulWidget {
   final Place place;
 
   final bool active;
+  final bool showBottomCategoryName;
+  final bool showTopCategoryName;
 
-  PlaceCard(this.x, this.y, this.categoryName, this.place, this.active,
-      {Key key})
-      : super(key: key);
+  PlaceCard({
+    @required this.x,
+    @required this.y,
+    @required this.categoryName,
+    @required this.place,
+    @required this.active,
+    @required this.showBottomCategoryName,
+    @required this.showTopCategoryName,
+    Key key,
+  }) : super(key: key);
 
   @override
   _PlaceCardState createState() => _PlaceCardState();
@@ -39,6 +48,8 @@ class _PlaceCardState extends State<PlaceCard> {
             ),
           ),
           infoOverlay(),
+          if (widget.showBottomCategoryName) bottomCategoryName(),
+          if (widget.showTopCategoryName) topCategoryName(),
         ],
       ),
     );
@@ -108,6 +119,37 @@ class _PlaceCardState extends State<PlaceCard> {
           weather(),
           priceAndName(),
         ],
+      ),
+    );
+  }
+
+  Widget bottomCategoryName() {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: categoryName(),
+    );
+  }
+
+  Widget topCategoryName() {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: categoryName(),
+    );
+  }
+
+  Widget categoryName() {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Opacity(
+        opacity: 0.67,
+        child: Text(
+          widget.categoryName,
+          style: TextStyle(
+            fontWeight: FontWeight.w900,
+            fontSize: 24,
+            color: Colors.white,
+          ),
+        ),
       ),
     );
   }
