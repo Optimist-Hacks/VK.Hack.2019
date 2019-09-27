@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
+  static const routeName = '/main';
+
   @override
   _MainPageState createState() => _MainPageState();
 }
