@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_here/data/model/place.dart';
 
 final rand = Random();
 
@@ -9,9 +10,14 @@ class PlaceCard extends StatefulWidget {
   final int x;
   final int y;
 
+  final String categoryName;
+  final Place place;
+
   final bool active;
 
-  PlaceCard(this.x, this.y, this.active, {Key key}) : super(key: key);
+  PlaceCard(this.x, this.y, this.categoryName, this.place, this.active,
+      {Key key})
+      : super(key: key);
 
   @override
   _PlaceCardState createState() => _PlaceCardState();
@@ -41,7 +47,7 @@ class _PlaceCardState extends State<PlaceCard> {
       child: Padding(
         padding: EdgeInsets.all(25),
         child: Text(
-          "24°",
+          "${widget.place.temperature.floor()}°",
           style: TextStyle(
             fontWeight: FontWeight.w500,
             fontSize: 16,
@@ -59,6 +65,7 @@ class _PlaceCardState extends State<PlaceCard> {
         padding: const EdgeInsets.all(25.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             price(),
             name(),
@@ -70,7 +77,7 @@ class _PlaceCardState extends State<PlaceCard> {
 
   Widget price() {
     return Text(
-      "\$184",
+      "\$${widget.place.price.floor()}",
       style: TextStyle(
         fontWeight: FontWeight.w500,
         fontSize: 34,
@@ -81,7 +88,7 @@ class _PlaceCardState extends State<PlaceCard> {
 
   Widget name() {
     return Text(
-      "Los Angeles",
+      widget.place.name,
       style: TextStyle(
         fontSize: 16,
         color: Colors.white,

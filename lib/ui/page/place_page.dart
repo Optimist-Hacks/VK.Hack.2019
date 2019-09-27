@@ -11,7 +11,7 @@ class _PlacePageState extends State<PlacePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PlaceCard(0,0, true),
+//      body: PlaceCard(0,0, true),
     );
   }
 }

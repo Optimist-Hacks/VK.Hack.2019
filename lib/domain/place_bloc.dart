@@ -9,7 +9,7 @@ const _tag = "place_bloc";
 class PlaceBloc {
   final PlaceRepository _placeRepository;
 
-  Stream<BuiltList<Category>> get placeStream => _placeRepository.placeStream;
+  Stream<BuiltList<Category>> get categoryStream => _placeRepository.placeStream;
 
   PlaceBloc(this._placeRepository);
 }
