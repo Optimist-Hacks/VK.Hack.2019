@@ -129,8 +129,7 @@ class _PlaceCardState extends State<PlaceCard> {
           ? widget._allBorderRadius
           : widget._bottomBorderRadius,
       child: CachedNetworkImage(
-        imageUrl:
-            "https://uc17127964c991e4650563590995.dl.dropboxusercontent.com/cd/0/inline/Apbg9dhPEVOB0pfItlNi5wQimnxXIRpYXV1D6P-PgnAeB8woc20fT_98SGESb-ppUzdZWRBb01IzYBVhuGvWnfL7Rcabvq8TIbJcdcUWmalDLTN0Db8VKmzrY5mehEC9fcc/file#",
+        imageUrl: "https://www.dropbox.com/s/e41zuwyrnnzxatp/preview.png?raw=1",
         alignment: Alignment.center,
         fit: BoxFit.cover,
       ),
@@ -262,7 +261,7 @@ class _PlaceCardState extends State<PlaceCard> {
   VideoPlayerController createVideoPlayerController() {
     Log.d(_tag, "Creaate video player controllere");
     return VideoPlayerController.network(
-        'https://ucf1de27a5d276af478bcc86cc0a.dl.dropboxusercontent.com/cd/0/inline/ApbuFHloj8IPpu4uuDaOWv2V-ymuTqBEpRfowd1PD-7WGH-nVAvozsq5I0IUgCIgBq4TU1QtfEgKd_9CAC59C8O63Xi08Q50STBp1Qcwt4Dsqh-_Twvh2ixkM9D_u_02DtY/file#')
+        'https://dropbox.com/s/t2t78zeu68ek24d/video.mp4?raw=1')
       ..setVolume(0.0)
       ..setLooping(true)
       ..initialize().then((_) {

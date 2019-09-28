@@ -100,32 +100,34 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
           final categoryName = categories[snapshot.data].name;
 
-          return AnimatedBuilder(
-            animation: animation,
-            builder: (context, child) {
-              double opacity;
+          return IgnorePointer(
+            child: AnimatedBuilder(
+              animation: animation,
+              builder: (context, child) {
+                double opacity;
 
-              if (animation.value <= 0.5) {
-                opacity = animation.value;
-              } else {
-                opacity = 0.5 - (animation.value - 0.5);
-              }
+                if (animation.value <= 0.5) {
+                  opacity = animation.value;
+                } else {
+                  opacity = 0.5 - (animation.value - 0.5);
+                }
 
-              return Opacity(
-                opacity: opacity,
-                child: Transform.scale(
-                  scale: animation.value,
-                  child: child,
+                return Opacity(
+                  opacity: opacity,
+                  child: Transform.scale(
+                    scale: animation.value,
+                    child: child,
+                  ),
+                );
+              },
+              child: Text(
+                categoryName.toUpperCase(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: GoColors.accent,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 72,
                 ),
-              );
-            },
-            child: Text(
-              categoryName.toUpperCase(),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: GoColors.accent,
-                fontWeight: FontWeight.w900,
-                fontSize: 72,
               ),
             ),
           );
