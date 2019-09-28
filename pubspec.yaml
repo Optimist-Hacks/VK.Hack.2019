@@ -23,7 +23,6 @@ dependencies:
   flutter_svg: ^0.14.1
   share: ^0.6.2+1
   preferences: ^4.0.0
-  flutter_downloader: ^1.2.2
 
 dev_dependencies:
   flutter_test:

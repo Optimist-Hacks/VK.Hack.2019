@@ -46,7 +46,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     super.initState();
 
     currentCategoryAnimationController = AnimationController(
-      duration: Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 700),
       vsync: this,
     );
 
@@ -304,9 +304,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 double opacity;
 
                 if (animation.value <= 0.5) {
-                  opacity = animation.value;
+                  opacity = (animation.value * 2) * 0.8;
                 } else {
-                  opacity = 0.5 - (animation.value - 0.5);
+                  opacity = (1 - (animation.value - 0.5) * 2) * 0.8;
                 }
 
                 return Opacity(
