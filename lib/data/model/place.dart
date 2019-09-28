@@ -18,6 +18,7 @@ abstract class Place implements Built<Place, PlaceBuilder> {
 
   String get video;
 
+  @nullable
   String get image;
 
   String get airport;

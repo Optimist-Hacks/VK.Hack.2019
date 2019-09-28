@@ -34,14 +34,16 @@ class _$PlaceSerializer implements StructuredSerializer<Place> {
       'video',
       serializers.serialize(object.video,
           specifiedType: const FullType(String)),
-      'image',
-      serializers.serialize(object.image,
-          specifiedType: const FullType(String)),
       'airport',
       serializers.serialize(object.airport,
           specifiedType: const FullType(String)),
     ];
-
+    if (object.image != null) {
+      result
+        ..add('image')
+        ..add(serializers.serialize(object.image,
+            specifiedType: const FullType(String)));
+    }
     return result;
   }
 
@@ -143,9 +145,6 @@ class _$Place extends Place {
     }
     if (video == null) {
       throw new BuiltValueNullFieldError('Place', 'video');
-    }
-    if (image == null) {
-      throw new BuiltValueNullFieldError('Place', 'image');
     }
     if (airport == null) {
       throw new BuiltValueNullFieldError('Place', 'airport');
