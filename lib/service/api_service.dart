@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:built_collection/built_collection.dart';
 
 const _tag = "api_service";
-const _baseUrl = "demo138.foxtrot.vkhackathon.com:8080";
+const _baseUrl = "demo138.foxtrot.vkhackathon.com";
 
 class HttpCode {
   static const OK = 200;
