@@ -234,6 +234,7 @@ class _PlacePageState extends State<PlacePage> {
         widget._place.description,
         textAlign: TextAlign.left,
         style: TextStyle(
+          height: 1.72,
           fontWeight: FontWeight.normal,
           color: GoColors.black,
           fontSize: 17.0,
