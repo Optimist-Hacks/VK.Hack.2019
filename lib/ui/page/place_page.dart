@@ -26,6 +26,7 @@ class _PlacePageState extends State<PlacePage> {
               _placeCard(),
               _temperatureAndTravelTime(),
               _description(),
+              SizedBox(height: 100,),
             ],
           ),
           _buyTicketButton(),

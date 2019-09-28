@@ -96,7 +96,8 @@ class _MainPageState extends State<MainPage> {
 
                                 final currentPlaceIndex = snapshot.data;
 
-                                final heroTag = "${Random().nextInt(0xFFFFFFFF)}";
+//                                final heroTag = "${Random().nextInt(0xFFFFFFFF)}";
+                                final heroTag = categories[y].places[x].id;
 
                                 return GestureDetector(
                                   onTap: () =>
