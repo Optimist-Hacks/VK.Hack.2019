@@ -222,7 +222,7 @@ class _PlaceCardState extends State<PlaceCard> {
   VideoPlayerController createVideoPlayerController() {
     Log.d(_tag, "Creaate video player controllere");
     return VideoPlayerController.network(
-        'https://ucf1de27a5d276af478bcc86cc0a.dl.dropboxusercontent.com/cd/0/inline/ApbuFHloj8IPpu4uuDaOWv2V-ymuTqBEpRfowd1PD-7WGH-nVAvozsq5I0IUgCIgBq4TU1QtfEgKd_9CAC59C8O63Xi08Q50STBp1Qcwt4Dsqh-_Twvh2ixkM9D_u_02DtY/file#')
+        'https://uc4b5a162e33b41d0f6c8ae98129.dl.dropboxusercontent.com/cd/0/inline/ApY8FwWSUFzNwTHxn9HYjkob4YdkDN8x603KTc9V4hcsSb1f1NQMweI2_0hrpm1zHToItT6VFGlOsIQzT-pU8VLahRSTPuI-AKSqCsY1RY0qgrrDDwIVEdilgBsXhMeaikw/file#')
       ..setVolume(0.0)
       ..setLooping(true)
       ..initialize().then((_) {
