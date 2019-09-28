@@ -600,9 +600,11 @@ packages:
   video_player:
     dependency: "direct main"
     description:
-      name: video_player
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "packages/video_player"
+      ref: video-player-cache
+      resolved-ref: "1c4832d44377a905fa1d70ddf2bf8e049f757ebb"
+      url: "git://github.com/otopba/plugins.git"
+    source: git
     version: "0.10.2+1"
   watcher:
     dependency: transitive
