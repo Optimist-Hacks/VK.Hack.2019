@@ -321,7 +321,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 categoryName.toUpperCase(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: GoColors.accent,
+                  color: Provider.of<GoColors>(context).cardTextColor,
                   fontWeight: FontWeight.w900,
                   fontSize: 72,
                 ),

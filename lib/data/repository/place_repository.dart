@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:built_collection/built_collection.dart';
 import 'package:go_here/data/model/category.dart';
+import 'package:go_here/data/model/place.dart';
 import 'package:go_here/service/api_service.dart';
 import 'package:go_here/utils/log.dart';
 import 'package:rxdart/rxdart.dart';

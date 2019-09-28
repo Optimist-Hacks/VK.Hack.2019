@@ -20,35 +20,49 @@ class App extends StatelessWidget {
     final placeBloc = PlaceBloc(placeRepository);
     final aviasalesService = AviasalesService();
     final preferencesService = PreferencesService();
-    return MultiProvider(
-      providers: [
-        Provider.value(value: placeBloc),
-        Provider.value(value: aviasalesService),
-        Provider.value(value: preferencesService),
-      ],
-      child: MaterialApp(
-        title: Strings.appName,
-        theme: ThemeData(
-          backgroundColor: GoColors.accent,
-          scaffoldBackgroundColor: GoColors.accent,
-          accentColor: GoColors.accent,
-        ),
-        routes: {
-          MainPage.routeName: (context) => MainPage(),
-        },
-        onGenerateRoute: (settings) {
-          switch (settings.name) {
-            case PlacePage.routeName:
-              final String categoryName = (settings.arguments as List) [0];
-              final Place place = (settings.arguments as List) [1];
-              final VideoPlayerController videoController = (settings.arguments as List) [2];
-              final Future<void> videoControllerInitializeCallback = (settings.arguments as List) [3];
-              return MaterialPageRoute(builder: (context) => PlacePage(categoryName, place, videoController, videoControllerInitializeCallback));
-          }
-          return null;
-        },
-        home: MainPage(),
-      ),
-    );
+
+    return StreamBuilder<bool>(
+        initialData: preferencesService.currentDartMode(),
+        stream: preferencesService.darkModeSubject,
+        builder: (context, snapshot) {
+          final goColors = GoColors(snapshot.data);
+
+          return MultiProvider(
+            providers: [
+              Provider.value(value: placeBloc),
+              Provider.value(value: aviasalesService),
+              Provider.value(value: preferencesService),
+              Provider.value(value: goColors),
+            ],
+            child: MaterialApp(
+              title: Strings.appName,
+              theme: ThemeData(
+                scaffoldBackgroundColor: goColors.backgroundColor,
+              ),
+              routes: {
+                MainPage.routeName: (context) => MainPage(),
+              },
+              onGenerateRoute: (settings) {
+                switch (settings.name) {
+                  case PlacePage.routeName:
+                    final String categoryName = (settings.arguments as List)[0];
+                    final Place place = (settings.arguments as List)[1];
+                    final VideoPlayerController videoController =
+                        (settings.arguments as List)[2];
+                    final Future<void> videoControllerInitializeCallback =
+                        (settings.arguments as List)[3];
+                    return MaterialPageRoute(
+                        builder: (context) => PlacePage(
+                            categoryName,
+                            place,
+                            videoController,
+                            videoControllerInitializeCallback));
+                }
+                return null;
+              },
+              home: MainPage(),
+            ),
+          );
+        });
   }
 }

@@ -11,6 +11,7 @@ import 'package:go_here/ui/images.dart';
 import 'package:go_here/utils/log.dart';
 import 'package:share/share.dart';
 import 'package:video_player/video_player.dart';
+import 'package:provider/provider.dart';
 
 const _tag = "place_card";
 final rand = Random();
@@ -149,8 +150,8 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
                 begin: FractionalOffset.topCenter,
                 end: FractionalOffset.bottomCenter,
                 colors: [
-                  GoColors.placeGradientStart,
-                  GoColors.placeGradientEnd
+                  Provider.of<GoColors>(context).placeGradientStart,
+                  Provider.of<GoColors>(context).placeGradientEnd
                 ],
                 stops: [0.0, 1.0],
               ),
@@ -216,7 +217,7 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
           style: TextStyle(
             fontWeight: FontWeight.w500,
             fontSize: 16,
-            color: GoColors.accent,
+            color: Provider.of<GoColors>(context).cardTextColor,
           ),
         ),
       ),
@@ -247,7 +248,7 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
       style: TextStyle(
         fontWeight: FontWeight.w500,
         fontSize: 34,
-        color: GoColors.accent,
+        color: Provider.of<GoColors>(context).cardTextColor,
       ),
     );
   }
@@ -257,7 +258,7 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
       widget.place.name,
       style: TextStyle(
         fontSize: 16,
-        color: GoColors.accent,
+        color: Provider.of<GoColors>(context).cardTextColor,
       ),
     );
   }
@@ -287,7 +288,7 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
           fit: BoxFit.cover,
           height: 16,
           width: 16,
-          color: GoColors.accent,
+          color: Provider.of<GoColors>(context).cardTextColor,
         ),
       ),
     );
@@ -310,7 +311,7 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
               height: 13,
               width: 15,
             ),
-            backgroundColor: GoColors.shareBackground,
+            backgroundColor: Provider.of<GoColors>(context).shareBackground,
             elevation: 0,
           ),
         ),
@@ -342,7 +343,7 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
           style: TextStyle(
             fontWeight: FontWeight.w900,
             fontSize: 24,
-            color: GoColors.accent,
+            color: Provider.of<GoColors>(context).cardTextColor,
           ),
         ),
       ),
@@ -388,7 +389,7 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
               child: Icon(
                 Icons.favorite,
                 size: containerWidth,
-                color: GoColors.accent,
+                color: Provider.of<GoColors>(context).cardTextColor,
               ),
             ),
           );

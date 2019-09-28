@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_here/data/model/category.dart';
 import 'package:go_here/data/model/place.dart';
 import 'package:go_here/service/aviasales_service.dart';
 import 'package:go_here/service/preferences_service.dart';
@@ -23,7 +22,8 @@ class PlacePage extends StatefulWidget {
   final VideoPlayerController _videoController;
   final Future<void> _videoControllerInitializeCallback;
 
-  const PlacePage(this._categoryName, this._place, this._videoController, this._videoControllerInitializeCallback);
+  const PlacePage(this._categoryName, this._place, this._videoController,
+      this._videoControllerInitializeCallback);
 
   @override
   _PlacePageState createState() => _PlacePageState();
@@ -43,7 +43,6 @@ class _PlacePageState extends State<PlacePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Stack(
         children: <Widget>[
           ListView(
@@ -76,7 +75,7 @@ class _PlacePageState extends State<PlacePage> {
                       fit: BoxFit.contain,
                       height: 9,
                       width: 26,
-                      color: GoColors.accent,
+                      color: Provider.of<GoColors>(context).cardTextColor,
                     ),
                   ),
                 ),
@@ -99,7 +98,10 @@ class _PlacePageState extends State<PlacePage> {
           gradient: LinearGradient(
             begin: FractionalOffset.topCenter,
             end: FractionalOffset.bottomCenter,
-            colors: [GoColors.buyGradientStart, GoColors.buyGradientEnd],
+            colors: [
+              Provider.of<GoColors>(context).buyGradientStart,
+              Provider.of<GoColors>(context).buyGradientEnd
+            ],
             stops: [0.0, 1.0],
           ),
         ),
@@ -118,7 +120,8 @@ class _PlacePageState extends State<PlacePage> {
           place: widget._place,
           active: true,
           videoController: widget._videoController,
-          videoControllerInitializeCallback: widget._videoControllerInitializeCallback,
+          videoControllerInitializeCallback:
+              widget._videoControllerInitializeCallback,
           showBottomCategoryName: false,
           showTopCategoryName: false,
           roundAllBorders: false,
@@ -143,7 +146,7 @@ class _PlacePageState extends State<PlacePage> {
                     Strings.buyATicket,
                     style: TextStyle(
                       fontSize: 19,
-                      color: GoColors.accent,
+                      color: Provider.of<GoColors>(context).buyTextColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -155,14 +158,14 @@ class _PlacePageState extends State<PlacePage> {
                     fit: BoxFit.cover,
                     height: 18,
                     width: 37,
-                    color: GoColors.airplane,
+                    color: Provider.of<GoColors>(context).airplane,
                   ),
                 ],
               ),
             ),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            color: Color(0xFF1B2038),
+            color: Provider.of<GoColors>(context).buyTicketBackgroundColor,
             onPressed: () => _onBuyPress(),
           ),
         ),
@@ -198,7 +201,7 @@ class _PlacePageState extends State<PlacePage> {
           "${widget._place.temperature.floor()}°",
           style: TextStyle(
             fontWeight: FontWeight.normal,
-            color: GoColors.black,
+            color: Provider.of<GoColors>(context).placeInfoTextColor,
             fontSize: 34,
           ),
         ),
@@ -206,7 +209,7 @@ class _PlacePageState extends State<PlacePage> {
           Strings.temperature,
           style: TextStyle(
             fontWeight: FontWeight.w500,
-            color: GoColors.black,
+            color: Provider.of<GoColors>(context).placeInfoTextColor,
             fontSize: 17,
           ),
         )
@@ -229,7 +232,7 @@ class _PlacePageState extends State<PlacePage> {
           Dates.getTimeBefore(widget._place.date),
           style: TextStyle(
             fontWeight: FontWeight.w500,
-            color: GoColors.black,
+            color: Provider.of<GoColors>(context).placeInfoTextColor,
             fontSize: 17,
           ),
         )
@@ -246,7 +249,7 @@ class _PlacePageState extends State<PlacePage> {
         style: TextStyle(
           height: 1.72,
           fontWeight: FontWeight.normal,
-          color: GoColors.black,
+          color: Provider.of<GoColors>(context).placeInfoTextColor,
           fontSize: 17.0,
         ),
       ),
