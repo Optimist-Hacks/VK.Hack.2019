@@ -96,7 +96,6 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
     return Scaffold(
       body: GestureDetector(
         onDoubleTap: () {
-          widget._preferencesService.setDarkMode(!widget._preferencesService.currentDartMode());
           if (widget._preferencesService.isLiked(widget.place.id)) {
             widget._preferencesService.removeLikedPlace(widget.place.id);
           } else {

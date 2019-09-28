@@ -66,6 +66,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     _preferencesService ??= Provider.of<PreferencesService>(context);
     _shakeDetector ??= ShakeDetector.autoStart(
       shakeCountResetTime: 1000,
+      shakeThresholdGravity: 2.0,
       onPhoneShake: () {
         Log.d(_tag, "Shake deteck");
         _preferencesService.setDarkMode(!_preferencesService.currentDartMode());
@@ -98,8 +99,14 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   Widget _verticalCarousel(BuiltList<Category> categories) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+    double height = MediaQuery
+        .of(context)
+        .size
+        .height;
 
     final categoriesCarousel = CarouselSlider(
       aspectRatio: width / height,
@@ -161,13 +168,17 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     return categoriesCarousel;
   }
 
-  Widget _horizontalCarousel(
-    int y,
-    BuiltList<Category> categories,
-    int currentCategoryIndex,
-  ) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+  Widget _horizontalCarousel(int y,
+      BuiltList<Category> categories,
+      int currentCategoryIndex,) {
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+    double height = MediaQuery
+        .of(context)
+        .size
+        .height;
 
     currentPlaceIndexSubjects[y] ??= BehaviorSubject<int>.seeded(0);
 
@@ -227,8 +238,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
               }
 
               return GestureDetector(
-                onTap: () =>
-                    _onPlaceTap(categories[y].name, categories[y].places[x]),
+                onTap: () {
+                  if (active)
+                    _onPlaceTap(categories[y].name, categories[y].places[x]);
+                },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Hero(
@@ -240,11 +253,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       active: active,
                       videoController: active ? _videoController : null,
                       videoControllerInitializeCallback:
-                          active ? _videoControllerInitializeCallback : null,
+                      active ? _videoControllerInitializeCallback : null,
                       showBottomCategoryName:
-                          _getTopCategoryIndex(categories.length) == y,
+                      _getTopCategoryIndex(categories.length) == y,
                       showTopCategoryName:
-                          _getBottomCategoryIndex(categories.length) == y,
+                      _getBottomCategoryIndex(categories.length) == y,
                       roundAllBorders: true,
                     ),
                   ),
@@ -291,7 +304,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
   Widget _currentCategory(BuiltList<Category> categories) {
     final animation =
-        Tween(begin: 0.0, end: 1.0).animate(currentCategoryAnimationController);
+    Tween(begin: 0.0, end: 1.0).animate(currentCategoryAnimationController);
 
     return Align(
       alignment: Alignment.center,
@@ -334,7 +347,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 categoryName.toUpperCase(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Provider.of<GoColors>(context).cardTextColor,
+                  color: Provider
+                      .of<GoColors>(context)
+                      .cardTextColor,
                   fontWeight: FontWeight.w900,
                   fontSize: 72,
                 ),
