@@ -37,6 +37,9 @@ class _$PlaceSerializer implements StructuredSerializer<Place> {
       'airport',
       serializers.serialize(object.airport,
           specifiedType: const FullType(String)),
+      'flightLink',
+      serializers.serialize(object.flightLink,
+          specifiedType: const FullType(String)),
     ];
     if (object.image != null) {
       result
@@ -90,6 +93,10 @@ class _$PlaceSerializer implements StructuredSerializer<Place> {
           result.airport = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
+        case 'flightLink':
+          result.flightLink = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
       }
     }
 
@@ -114,6 +121,8 @@ class _$Place extends Place {
   final String image;
   @override
   final String airport;
+  @override
+  final String flightLink;
 
   factory _$Place([void Function(PlaceBuilder) updates]) =>
       (new PlaceBuilder()..update(updates)).build();
@@ -126,7 +135,8 @@ class _$Place extends Place {
       this.temperature,
       this.video,
       this.image,
-      this.airport})
+      this.airport,
+      this.flightLink})
       : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('Place', 'id');
@@ -149,6 +159,9 @@ class _$Place extends Place {
     if (airport == null) {
       throw new BuiltValueNullFieldError('Place', 'airport');
     }
+    if (flightLink == null) {
+      throw new BuiltValueNullFieldError('Place', 'flightLink');
+    }
   }
 
   @override
@@ -169,7 +182,8 @@ class _$Place extends Place {
         temperature == other.temperature &&
         video == other.video &&
         image == other.image &&
-        airport == other.airport;
+        airport == other.airport &&
+        flightLink == other.flightLink;
   }
 
   @override
@@ -179,13 +193,15 @@ class _$Place extends Place {
             $jc(
                 $jc(
                     $jc(
-                        $jc($jc($jc(0, id.hashCode), name.hashCode),
-                            description.hashCode),
-                        price.hashCode),
-                    temperature.hashCode),
-                video.hashCode),
-            image.hashCode),
-        airport.hashCode));
+                        $jc(
+                            $jc($jc($jc(0, id.hashCode), name.hashCode),
+                                description.hashCode),
+                            price.hashCode),
+                        temperature.hashCode),
+                    video.hashCode),
+                image.hashCode),
+            airport.hashCode),
+        flightLink.hashCode));
   }
 
   @override
@@ -198,7 +214,8 @@ class _$Place extends Place {
           ..add('temperature', temperature)
           ..add('video', video)
           ..add('image', image)
-          ..add('airport', airport))
+          ..add('airport', airport)
+          ..add('flightLink', flightLink))
         .toString();
   }
 }
@@ -238,6 +255,10 @@ class PlaceBuilder implements Builder<Place, PlaceBuilder> {
   String get airport => _$this._airport;
   set airport(String airport) => _$this._airport = airport;
 
+  String _flightLink;
+  String get flightLink => _$this._flightLink;
+  set flightLink(String flightLink) => _$this._flightLink = flightLink;
+
   PlaceBuilder();
 
   PlaceBuilder get _$this {
@@ -250,6 +271,7 @@ class PlaceBuilder implements Builder<Place, PlaceBuilder> {
       _video = _$v.video;
       _image = _$v.image;
       _airport = _$v.airport;
+      _flightLink = _$v.flightLink;
       _$v = null;
     }
     return this;
@@ -279,7 +301,8 @@ class PlaceBuilder implements Builder<Place, PlaceBuilder> {
             temperature: temperature,
             video: video,
             image: image,
-            airport: airport);
+            airport: airport,
+            flightLink: flightLink);
     replace(_$result);
     return _$result;
   }

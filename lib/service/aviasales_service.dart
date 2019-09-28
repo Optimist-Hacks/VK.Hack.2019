@@ -7,12 +7,11 @@ const _tag = "aviasales_service";
 class AviasalesService {
   Future<void> openPlaceLink(Place place) async {
     Log.d(_tag, "Open place $place");
-    final url = "https://www.aviasales.ru/search/LED2809${place.airport}1";
-    if (await canLaunch(url)) {
-      Log.e(_tag, "Try to open url $url");
-      await launch(url);
+    if (await canLaunch(place.flightLink)) {
+      Log.e(_tag, "Try to open url ${place.flightLink}");
+      await launch(place.flightLink);
     } else {
-      Log.e(_tag, "Can't open url $url");
+      Log.e(_tag, "Can't open url ${place.flightLink}");
     }
   }
 }

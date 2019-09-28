@@ -20,7 +20,7 @@ class PlaceRepository {
 
   Future<void> _loadCategories() async {
 //    Log.d(_tag, "Load categories");
-//    final categories = await _apiService.getPlaces();
+    final realCategories = await _apiService.getPlaces();
 //    Log.d(_tag, "${categories.length} categories retrieved");
 
     final categories = List.generate(5, (i) {
@@ -30,9 +30,11 @@ class PlaceRepository {
           ..price = 100
           ..temperature = 30
           ..name = "Place Name $j"
-          ..description = "Description, laksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdja"
+          ..description =
+              "Description, laksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdja"
           ..airport = "Airport"
-          ..video = "video");
+          ..video = "video"
+          ..flightLink = "http://google.com");
       });
 
       return Category((b) => b
