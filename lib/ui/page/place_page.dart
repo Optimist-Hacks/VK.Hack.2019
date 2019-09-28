@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_here/data/model/place.dart';
+import 'package:go_here/service/aviasales_service.dart';
 import 'package:go_here/ui/colors.dart';
 import 'package:go_here/ui/images.dart';
 import 'package:go_here/ui/strings.dart';
 import 'package:go_here/ui/widget/place_card.dart';
+import 'package:go_here/utils/log.dart';
+import 'package:provider/provider.dart';
+
+const _tag = "place_page";
 
 class PlacePage extends StatefulWidget {
   static const routeName = '/place';
@@ -17,6 +22,14 @@ class PlacePage extends StatefulWidget {
 }
 
 class _PlacePageState extends State<PlacePage> {
+  AviasalesService _aviasalesService;
+
+  @override
+  void didChangeDependencies() {
+    _aviasalesService ??= Provider.of<AviasalesService>(context);
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +41,9 @@ class _PlacePageState extends State<PlacePage> {
               _placeCard(),
               _temperatureAndTravelTime(),
               _description(),
-              SizedBox(height: 100,),
+              SizedBox(
+                height: 100,
+              ),
             ],
           ),
           _buyTicketButton(),
@@ -89,7 +104,7 @@ class _PlacePageState extends State<PlacePage> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             color: Color(0xFF1B2038),
-            onPressed: () {},
+            onPressed: () => _onBuyPress(),
           ),
         ),
       ),
@@ -170,5 +185,10 @@ class _PlacePageState extends State<PlacePage> {
         ),
       ),
     );
+  }
+
+  void _onBuyPress() {
+    Log.d(_tag, "Buy press ${widget._place}");
+    _aviasalesService.openPlaceLink(widget._place);
   }
 }
