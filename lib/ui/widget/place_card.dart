@@ -93,10 +93,31 @@ class _PlaceCardState extends State<PlaceCard> {
                 ],
               ),
             ),
+            _gradient(),
             infoOverlay(),
             if (widget.showBottomCategoryName) bottomCategoryName(),
             if (widget.showTopCategoryName) topCategoryName(),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _gradient() {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Opacity(
+        opacity: 0.7,
+        child: Container(
+          height: 197.0,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: FractionalOffset.topCenter,
+              end: FractionalOffset.bottomCenter,
+              colors: [GoColors.placeGradientStart, GoColors.placeGradientEnd],
+              stops: [0.0, 1.0],
+            ),
+          ),
         ),
       ),
     );
