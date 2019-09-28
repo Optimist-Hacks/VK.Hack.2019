@@ -34,10 +34,9 @@ class App extends StatelessWidget {
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case PlacePage.routeName:
-              final String heroTag = (settings.arguments as List)[0];
-              final Place place = (settings.arguments as List)[1];
+              final Place place = settings.arguments;
               return MaterialPageRoute(
-                  builder: (context) => PlacePage(heroTag, place));
+                  builder: (context) => PlacePage(place));
           }
           return null;
         },

@@ -8,10 +8,9 @@ import 'package:go_here/ui/widget/place_card.dart';
 
 class PlacePage extends StatefulWidget {
   static const routeName = '/place';
-  final String _heroTag;
   final Place _place;
 
-  const PlacePage(this._heroTag, this._place);
+  const PlacePage(this._place);
 
   @override
   _PlacePageState createState() => _PlacePageState();
@@ -42,7 +41,6 @@ class _PlacePageState extends State<PlacePage> {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.56,
       child: PlaceCard(
-        heroTag: widget._heroTag,
         x: 0,
         y: 0,
         categoryName: "anus",

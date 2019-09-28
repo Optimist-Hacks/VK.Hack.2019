@@ -17,8 +17,6 @@ class PlaceCard extends StatefulWidget {
     bottomRight: Radius.circular(30),
   );
 
-  final String heroTag;
-
   final int x;
   final int y;
 
@@ -31,7 +29,6 @@ class PlaceCard extends StatefulWidget {
   final bool roundAllBorders;
 
   PlaceCard({
-    @required this.heroTag,
     @required this.x,
     @required this.y,
     @required this.categoryName,
@@ -75,7 +72,7 @@ class _PlaceCardState extends State<PlaceCard> {
     }
 
     return Hero(
-      tag: widget.heroTag,
+      tag: widget.place.id,
       child: Card(
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(

@@ -96,16 +96,12 @@ class _MainPageState extends State<MainPage> {
 
                                 final currentPlaceIndex = snapshot.data;
 
-//                                final heroTag = "${Random().nextInt(0xFFFFFFFF)}";
-                                final heroTag = categories[y].places[x].id;
-
                                 return GestureDetector(
                                   onTap: () =>
-                                      _onPlaceTap(heroTag, categories[y].places[x]),
+                                      _onPlaceTap(categories[y].places[x]),
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: PlaceCard(
-                                      heroTag: heroTag,
                                       x: x,
                                       y: y,
                                       categoryName: categories[y].name,
@@ -204,9 +200,9 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  _onPlaceTap(String heroTag, Place place) {
+  _onPlaceTap(Place place) {
     Log.d(_tag, "On place tap $place");
-    Navigator.pushNamed(context, PlacePage.routeName, arguments: [heroTag, place],);
+    Navigator.pushNamed(context, PlacePage.routeName, arguments: place,);
   }
 
   int _getTopCategoryIndex(int categoriesLength) {
