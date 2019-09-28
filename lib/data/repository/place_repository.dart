@@ -34,7 +34,8 @@ class PlaceRepository {
               "Description, laksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdja"
           ..airport = "Airport"
           ..video = "video"
-          ..flightLink = "http://google.com");
+          ..flightLink = "http://google.com"
+          ..date = "2019-10-10");
       });
 
       return Category((b) => b

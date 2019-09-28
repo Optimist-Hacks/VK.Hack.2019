@@ -25,6 +25,8 @@ abstract class Place implements Built<Place, PlaceBuilder> {
 
   String get flightLink;
 
+  String get date;
+
   Place._();
 
   factory Place([void Function(PlaceBuilder) updates]) = _$Place;

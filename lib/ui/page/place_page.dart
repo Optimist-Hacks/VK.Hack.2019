@@ -7,6 +7,7 @@ import 'package:go_here/ui/colors.dart';
 import 'package:go_here/ui/images.dart';
 import 'package:go_here/ui/strings.dart';
 import 'package:go_here/ui/widget/place_card.dart';
+import 'package:go_here/utils/dates.dart';
 import 'package:go_here/utils/log.dart';
 import 'package:provider/provider.dart';
 
@@ -215,7 +216,7 @@ class _PlacePageState extends State<PlacePage> {
           width: 27,
         ),
         Text(
-          "In 2 days 1h",
+          Dates.getTimeBefore(widget._place.date),
           style: TextStyle(
             fontWeight: FontWeight.w500,
             color: GoColors.black,
