@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:built_collection/built_collection.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -202,7 +200,11 @@ class _MainPageState extends State<MainPage> {
 
   _onPlaceTap(Place place) {
     Log.d(_tag, "On place tap $place");
-    Navigator.pushNamed(context, PlacePage.routeName, arguments: place,);
+    Navigator.pushNamed(
+      context,
+      PlacePage.routeName,
+      arguments: place,
+    );
   }
 
   int _getTopCategoryIndex(int categoriesLength) {
