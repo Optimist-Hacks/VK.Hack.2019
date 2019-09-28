@@ -3,11 +3,15 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_here/data/model/place.dart';
+import 'package:go_here/utils/log.dart';
 import 'package:video_player/video_player.dart';
 
+const _tag = "place_card";
 final rand = Random();
 
 class PlaceCard extends StatefulWidget {
+  final _borderRadius = BorderRadius.circular(30);
+
   final int x;
   final int y;
 
@@ -40,7 +44,7 @@ class _PlaceCardState extends State<PlaceCard> {
   void initState() {
     super.initState();
 
-    if(widget.active) {
+    if (widget.active) {
       _videoController = createVideoPlayerController();
     }
   }
@@ -53,21 +57,19 @@ class _PlaceCardState extends State<PlaceCard> {
 
   @override
   Widget build(BuildContext context) {
-  if(widget.active) {
-    _videoController ??= createVideoPlayerController();
-  } else {
-    _videoController?.dispose();
-    _videoController = null;
-  }
+    if (widget.active) {
+      _videoController ??= createVideoPlayerController();
+    } else {
+      _videoController?.dispose();
+      _videoController = null;
+    }
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      shape: RoundedRectangleBorder(borderRadius: widget._borderRadius),
       margin: EdgeInsets.all(8),
-//      color: Color(rand.nextInt(0xFFFFFFFF)),
       child: Stack(
         children: <Widget>[
           if (widget.active) video(),
           Container(
-//            color: widget.active ? Colors.green : Colors.grey,
             child: Center(
               child: Text("${widget.x},${widget.y}"),
             ),
@@ -82,13 +84,28 @@ class _PlaceCardState extends State<PlaceCard> {
 
   Widget video() {
     return _videoController.value.initialized
-        ? AspectRatio(
-            aspectRatio: _videoController.value.aspectRatio,
+        ? _centerCropVideo()
+        : Container(color: Colors.blueGrey);
+  }
+
+  Widget _centerCropVideo() {
+    return new LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        double containerWidth = constraints.maxWidth;
+        double containerHeight = constraints.maxHeight;
+        Log.d(_tag, "maxWidth = $containerWidth maxHeight = $containerHeight");
+        double size = max(containerWidth, containerHeight);
+        return ClipRRect(
+          borderRadius: widget._borderRadius,
+          child: OverflowBox(
+            maxWidth: size,
+            maxHeight: size,
+            alignment: Alignment.center,
             child: VideoPlayer(_videoController),
-          )
-        : Container(
-            color: Colors.blueGrey,
-          );
+          ),
+        );
+      },
+    );
   }
 
   Widget weather() {
@@ -190,11 +207,14 @@ class _PlaceCardState extends State<PlaceCard> {
     );
   }
 
-  VideoPlayerController createVideoPlayerController(){
+  VideoPlayerController createVideoPlayerController() {
+    Log.d(_tag, "Creaate video player controllere");
     return VideoPlayerController.network(
-        'http://www.sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4')
+        'https://ucf1de27a5d276af478bcc86cc0a.dl.dropboxusercontent.com/cd/0/inline/ApbuFHloj8IPpu4uuDaOWv2V-ymuTqBEpRfowd1PD-7WGH-nVAvozsq5I0IUgCIgBq4TU1QtfEgKd_9CAC59C8O63Xi08Q50STBp1Qcwt4Dsqh-_Twvh2ixkM9D_u_02DtY/file#')
+      ..setVolume(0.0)
+      ..setLooping(true)
       ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        Log.d(_tag, "Controller initialized");
         setState(() {});
         _videoController?.play();
       });
