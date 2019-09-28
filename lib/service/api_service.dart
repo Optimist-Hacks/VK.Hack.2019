@@ -17,7 +17,6 @@ class HttpCode {
 
 class ApiService {
   static const _timeoutDuration = Duration(seconds: 30);
-  final _client = http.Client();
 
   ApiService();
 
@@ -33,16 +32,18 @@ class ApiService {
   Future<dynamic> _get(String path, {Map<String, String> params}) async {
     final uri = _buildUri("$path", params: params);
     Log.d(_tag, "-> GET url = $uri, params = $params");
-
-    final response = await _client
+    final client = http.Client();
+    final response = await client
         .get(uri)
         .timeout(_timeoutDuration, onTimeout: _onTimeout)
         .catchError((error) {
       Log.e(_tag,
           "<- GET url = $uri, Error while making GET request, error = $error");
+      client.close();
       return null;
     });
 
+    client.close();
     if (response == null) {
       return null;
     }
