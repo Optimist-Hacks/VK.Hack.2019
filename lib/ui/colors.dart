@@ -10,4 +10,5 @@ class GoColors {
 
   static final placeGradientStart = Color(0x00000000);
   static final placeGradientEnd = Color(0x82000000);
+  static const shareBackground = Color(0x1AFFFFFF);
 }

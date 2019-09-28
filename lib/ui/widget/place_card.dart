@@ -3,8 +3,10 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_here/data/model/place.dart';
 import 'package:go_here/ui/colors.dart';
+import 'package:go_here/ui/images.dart';
 import 'package:go_here/utils/log.dart';
 import 'package:video_player/video_player.dart';
 
@@ -222,7 +224,33 @@ class _PlaceCardState extends State<PlaceCard> {
         children: <Widget>[
           weather(),
           priceAndName(),
+          if (!widget.roundAllBorders) shareButton(),
         ],
+      ),
+    );
+  }
+
+  Widget shareButton() {
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: Padding(
+        padding: EdgeInsets.only(right: 20.0, bottom: 30.0),
+        child: SizedBox(
+          width: 38.0,
+          height: 38.0,
+          child: FloatingActionButton(
+            heroTag: null,
+            onPressed: _onSharePress,
+            child: SvgPicture.asset(
+              Images.share,
+              fit: BoxFit.cover,
+              height: 13,
+              width: 15,
+            ),
+            backgroundColor: GoColors.shareBackground,
+            elevation: 0,
+          ),
+        ),
       ),
     );
   }
@@ -269,5 +297,9 @@ class _PlaceCardState extends State<PlaceCard> {
         setState(() {});
         _videoController?.play();
       });
+  }
+
+  void _onSharePress() {
+    Log.d(_tag, "On share press");
   }
 }
