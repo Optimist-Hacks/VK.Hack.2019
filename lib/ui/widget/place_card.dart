@@ -56,6 +56,8 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
 
   AnimationController heartAnimationController;
 
+  bool liked;
+
   @override
   void initState() {
     super.initState();
@@ -67,6 +69,13 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
       duration: Duration(milliseconds: 500),
       vsync: this,
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    liked = widget._preferencesService.isLiked(widget.place.id);
   }
 
   @override
@@ -88,9 +97,18 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
       tag: widget.place.id,
       child: GestureDetector(
         onDoubleTap: () {
-          heartAnimationController
-            ..reset()
-            ..forward();
+          if (widget._preferencesService.isLiked(widget.place.id)) {
+            widget._preferencesService.removeLikedPlace(widget.place.id);
+          } else {
+            heartAnimationController
+              ..reset()
+              ..forward();
+            widget._preferencesService.addLikedPlace(widget.place.id);
+          }
+
+          setState(() {
+            liked = widget._preferencesService.isLiked(widget.place.id);
+          });
         },
         child: Card(
           margin: EdgeInsets.zero,
@@ -240,7 +258,7 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
       duration: Duration(milliseconds: 500),
       child: Stack(
         children: <Widget>[
-          if (widget._preferencesService.isLiked(widget.place.id)) _heart(),
+          if (liked) _heart(),
           _weather(),
           _priceAndName(),
           if (!widget.roundAllBorders) _shareButton(),
