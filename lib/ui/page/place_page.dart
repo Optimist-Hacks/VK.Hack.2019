@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_here/data/model/place.dart';
 import 'package:go_here/ui/colors.dart';
+import 'package:go_here/ui/images.dart';
+import 'package:go_here/ui/strings.dart';
 import 'package:go_here/ui/widget/place_card.dart';
 
 class PlacePage extends StatefulWidget {
@@ -65,18 +68,22 @@ class _PlacePageState extends State<PlacePage> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Text(
-                    "Buy a ticket",
+                    Strings.buyATicket,
                     style: TextStyle(
-                        fontSize: 19,
-                        color: GoColors.accent,
-                        fontWeight: FontWeight.bold),
+                      fontSize: 19,
+                      color: GoColors.accent,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   SizedBox(
                     width: 12,
                   ),
-                  Icon(
-                    Icons.airplanemode_active,
-                    color: Color(0xFFEF7340),
+                  SvgPicture.asset(
+                    Images.airplane,
+                    fit: BoxFit.cover,
+                    height: 18,
+                    width: 37,
+                    color: GoColors.airplane,
                   ),
                 ],
               ),
