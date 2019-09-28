@@ -180,8 +180,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                   padding: const EdgeInsets.all(8.0),
                   child: PlaceCard(
                     Provider.of<PreferencesService>(context),
-                    x: x,
-                    y: y,
                     categoryName: categories[y].name,
                     place: categories[y].places[x],
                     active: currentCategoryIndex == y && currentPlaceIndex == x,

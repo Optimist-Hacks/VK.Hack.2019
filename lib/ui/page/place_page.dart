@@ -41,6 +41,7 @@ class _PlacePageState extends State<PlacePage> {
       body: Stack(
         children: <Widget>[
           ListView(
+            padding: EdgeInsets.zero,
             controller: _scrollController,
             children: [
               _placeCard(),
@@ -105,8 +106,6 @@ class _PlacePageState extends State<PlacePage> {
       height: MediaQuery.of(context).size.height * 0.56,
       child: PlaceCard(
         Provider.of<PreferencesService>(context),
-        x: 0,
-        y: 0,
         categoryName: "anus",
         place: widget._place,
         active: true,

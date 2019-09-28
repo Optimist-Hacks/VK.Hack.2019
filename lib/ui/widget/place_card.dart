@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -23,9 +24,6 @@ class PlaceCard extends StatefulWidget {
     bottomRight: Radius.circular(30),
   );
 
-  final int x;
-  final int y;
-
   final String categoryName;
   final Place place;
 
@@ -36,8 +34,6 @@ class PlaceCard extends StatefulWidget {
 
   PlaceCard(
     this._preferencesService, {
-    @required this.x,
-    @required this.y,
     @required this.categoryName,
     @required this.place,
     @required this.active,
@@ -62,7 +58,9 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     if (widget.active) {
-      _videoController = createVideoPlayerController();
+      if (Platform.isAndroid) {
+        _videoController = createVideoPlayerController();
+      }
     }
 
     heartAnimationController = AnimationController(
@@ -94,42 +92,45 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
       _videoController = null;
     }
 
-    return Hero(
-      tag: widget.place.id,
-      child: GestureDetector(
-        onDoubleTap: () {
-          if (widget._preferencesService.isLiked(widget.place.id)) {
-            widget._preferencesService.removeLikedPlace(widget.place.id);
-          } else {
-            heartAnimationController
-              ..reset()
-              ..forward();
-            widget._preferencesService.addLikedPlace(widget.place.id);
-          }
+    return Scaffold(
+      body: Hero(
+        tag: widget.place.id,
+        child: GestureDetector(
+          onDoubleTap: () {
+            if (widget._preferencesService.isLiked(widget.place.id)) {
+              widget._preferencesService.removeLikedPlace(widget.place.id);
+            } else {
+              heartAnimationController
+                ..reset()
+                ..forward();
+              widget._preferencesService.addLikedPlace(widget.place.id);
+            }
 
-          setState(() {
-            liked = widget._preferencesService.isLiked(widget.place.id);
-          });
-        },
-        child: Card(
-          margin: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-              borderRadius: widget.roundAllBorders
-                  ? widget._allBorderRadius
-                  : widget._bottomBorderRadius),
-          child: Stack(
-            fit: StackFit.expand,
-            children: <Widget>[
-              _image(),
-              if (widget.active &&
-                  (_videoController?.value?.initialized ?? false))
-                _video(),
-              _gradient(),
-              infoOverlay(),
-              if (widget.showBottomCategoryName) bottomCategoryName(),
-              if (widget.showTopCategoryName) topCategoryName(),
-              _heartAnimation(),
-            ],
+            setState(() {
+              liked = widget._preferencesService.isLiked(widget.place.id);
+            });
+          },
+          child: Card(
+            margin: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+                borderRadius: widget.roundAllBorders
+                    ? widget._allBorderRadius
+                    : widget._bottomBorderRadius),
+            child: Stack(
+              fit: StackFit.expand,
+              children: <Widget>[
+                _image(),
+                if (widget.active &&
+                    (_videoController?.value?.initialized ?? false) &&
+                    Platform.isAndroid)
+                  _video(),
+                _gradient(),
+                infoOverlay(),
+                if (widget.showBottomCategoryName) bottomCategoryName(),
+                if (widget.showTopCategoryName) topCategoryName(),
+                _heartAnimation(),
+              ],
+            ),
           ),
         ),
       ),
