@@ -46,8 +46,26 @@ class _PlacePageState extends State<PlacePage> {
               ),
             ],
           ),
+          _gradient(),
           _buyTicketButton(),
         ],
+      ),
+    );
+  }
+
+  Widget _gradient() {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        height: 132.0,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: FractionalOffset.topCenter,
+            end: FractionalOffset.bottomCenter,
+            colors: [GoColors.buyGradientStart, GoColors.buyGradientEnd],
+            stops: [0.0, 1.0],
+          ),
+        ),
       ),
     );
   }
