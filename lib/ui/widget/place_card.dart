@@ -167,7 +167,7 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
           ? widget._allBorderRadius
           : widget._bottomBorderRadius,
       child: CachedNetworkImage(
-        imageUrl: "https://www.dropbox.com/s/e41zuwyrnnzxatp/preview.png?raw=1",
+        imageUrl: widget.place.imageUrl,
         alignment: Alignment.center,
         fit: BoxFit.cover,
       ),
@@ -342,7 +342,7 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
   void _onSharePress() {
     Log.d(_tag, "On share press");
     Share.share(
-        "Wow!\n\nTickeets to ${widget.place.name} are only ${widget.place.price.floor()}\$\n\nLet's go here!\n\n${widget.place.video}");
+        "Wow!\n\nTickeets to ${widget.place.name} are only ${widget.place.price.floor()}\$\n\nLet's go here!\n\n${widget.place.videoUrl}");
   }
 
   Widget _heartAnimation() {

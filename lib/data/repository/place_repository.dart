@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:built_collection/built_collection.dart';
 import 'package:go_here/data/model/category.dart';
-import 'package:go_here/data/model/place.dart';
 import 'package:go_here/service/api_service.dart';
 import 'package:go_here/utils/log.dart';
 import 'package:rxdart/rxdart.dart';
@@ -22,31 +19,33 @@ class PlaceRepository {
 
   Future<void> _loadCategories() async {
 //    Log.d(_tag, "Load categories");
-    final realCategories = await _apiService.getPlaces();
+    final categories = await _apiService.getPlaces();
 //    Log.d(_tag, "${categories.length} categories retrieved");
 
-    final rand = Random();
-    final categories = List.generate(5, (i) {
-      final places = List.generate(5, (j) {
-        return Place((b) => b
-          ..id = "id $i,$j"
-          ..price = 100
-          ..temperature = 30
-          ..name = "Place Name $j"
-          ..description =
-              "Description, laksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdja"
-          ..airport = "Airport"
-          ..video = rand.nextBool()
-              ? "https://dropbox.com/s/t2t78zeu68ek24d/video.mp4?raw=1"
-              : "https://www.dropbox.com/s/qeu9h52x0lnz7vg/mountains1.mp4?raw=1"
-          ..flightLink = "http://google.com"
-          ..date = "2019-10-10");
-      });
-
-      return Category((b) => b
-        ..places = ListBuilder(places)
-        ..name = "Category Name $i");
-    });
+//    final rand = Random();
+//    final categories = List.generate(5, (i) {
+//      final places = List.generate(5, (j) {
+//        return Place((b) => b
+//          ..id = "id $i,$j"
+//          ..price = 100
+//          ..temperature = 30
+//          ..name = "Place Name $j"
+//          ..description =
+//              "Description, laksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdja"
+//          ..airport = "Airport"
+//          ..videoUrl = rand.nextBool()
+//              ? "https://dropbox.com/s/t2t78zeu68ek24d/video.mp4?raw=1"
+//              : "https://www.dropbox.com/s/qeu9h52x0lnz7vg/mountains1.mp4?raw=1"
+//          ..imageUrl =
+//              "https://www.dropbox.com/s/q525yo22b1bqhql/Beaches1.png?raw=1"
+//          ..flightLink = "http://google.com"
+//          ..date = "2019-10-10");
+//      });
+//
+//      return Category((b) => b
+//        ..places = ListBuilder(places)
+//        ..name = "Category Name $i");
+//    });
 
     _categoriesSubject.add(BuiltList(categories));
   }

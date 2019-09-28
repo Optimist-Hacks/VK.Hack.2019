@@ -32,7 +32,10 @@ class _$PlaceSerializer implements StructuredSerializer<Place> {
       serializers.serialize(object.temperature,
           specifiedType: const FullType(double)),
       'video',
-      serializers.serialize(object.video,
+      serializers.serialize(object.videoUrl,
+          specifiedType: const FullType(String)),
+      'image',
+      serializers.serialize(object.imageUrl,
           specifiedType: const FullType(String)),
       'airport',
       serializers.serialize(object.airport,
@@ -43,12 +46,7 @@ class _$PlaceSerializer implements StructuredSerializer<Place> {
       'date',
       serializers.serialize(object.date, specifiedType: const FullType(String)),
     ];
-    if (object.image != null) {
-      result
-        ..add('image')
-        ..add(serializers.serialize(object.image,
-            specifiedType: const FullType(String)));
-    }
+
     return result;
   }
 
@@ -84,11 +82,11 @@ class _$PlaceSerializer implements StructuredSerializer<Place> {
               specifiedType: const FullType(double)) as double;
           break;
         case 'video':
-          result.video = serializers.deserialize(value,
+          result.videoUrl = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
         case 'image':
-          result.image = serializers.deserialize(value,
+          result.imageUrl = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
         case 'airport':
@@ -122,9 +120,9 @@ class _$Place extends Place {
   @override
   final double temperature;
   @override
-  final String video;
+  final String videoUrl;
   @override
-  final String image;
+  final String imageUrl;
   @override
   final String airport;
   @override
@@ -141,8 +139,8 @@ class _$Place extends Place {
       this.description,
       this.price,
       this.temperature,
-      this.video,
-      this.image,
+      this.videoUrl,
+      this.imageUrl,
       this.airport,
       this.flightLink,
       this.date})
@@ -162,8 +160,11 @@ class _$Place extends Place {
     if (temperature == null) {
       throw new BuiltValueNullFieldError('Place', 'temperature');
     }
-    if (video == null) {
-      throw new BuiltValueNullFieldError('Place', 'video');
+    if (videoUrl == null) {
+      throw new BuiltValueNullFieldError('Place', 'videoUrl');
+    }
+    if (imageUrl == null) {
+      throw new BuiltValueNullFieldError('Place', 'imageUrl');
     }
     if (airport == null) {
       throw new BuiltValueNullFieldError('Place', 'airport');
@@ -192,8 +193,8 @@ class _$Place extends Place {
         description == other.description &&
         price == other.price &&
         temperature == other.temperature &&
-        video == other.video &&
-        image == other.image &&
+        videoUrl == other.videoUrl &&
+        imageUrl == other.imageUrl &&
         airport == other.airport &&
         flightLink == other.flightLink &&
         date == other.date;
@@ -212,8 +213,8 @@ class _$Place extends Place {
                                     description.hashCode),
                                 price.hashCode),
                             temperature.hashCode),
-                        video.hashCode),
-                    image.hashCode),
+                        videoUrl.hashCode),
+                    imageUrl.hashCode),
                 airport.hashCode),
             flightLink.hashCode),
         date.hashCode));
@@ -227,8 +228,8 @@ class _$Place extends Place {
           ..add('description', description)
           ..add('price', price)
           ..add('temperature', temperature)
-          ..add('video', video)
-          ..add('image', image)
+          ..add('videoUrl', videoUrl)
+          ..add('imageUrl', imageUrl)
           ..add('airport', airport)
           ..add('flightLink', flightLink)
           ..add('date', date))
@@ -259,13 +260,13 @@ class PlaceBuilder implements Builder<Place, PlaceBuilder> {
   double get temperature => _$this._temperature;
   set temperature(double temperature) => _$this._temperature = temperature;
 
-  String _video;
-  String get video => _$this._video;
-  set video(String video) => _$this._video = video;
+  String _videoUrl;
+  String get videoUrl => _$this._videoUrl;
+  set videoUrl(String videoUrl) => _$this._videoUrl = videoUrl;
 
-  String _image;
-  String get image => _$this._image;
-  set image(String image) => _$this._image = image;
+  String _imageUrl;
+  String get imageUrl => _$this._imageUrl;
+  set imageUrl(String imageUrl) => _$this._imageUrl = imageUrl;
 
   String _airport;
   String get airport => _$this._airport;
@@ -288,8 +289,8 @@ class PlaceBuilder implements Builder<Place, PlaceBuilder> {
       _description = _$v.description;
       _price = _$v.price;
       _temperature = _$v.temperature;
-      _video = _$v.video;
-      _image = _$v.image;
+      _videoUrl = _$v.videoUrl;
+      _imageUrl = _$v.imageUrl;
       _airport = _$v.airport;
       _flightLink = _$v.flightLink;
       _date = _$v.date;
@@ -320,8 +321,8 @@ class PlaceBuilder implements Builder<Place, PlaceBuilder> {
             description: description,
             price: price,
             temperature: temperature,
-            video: video,
-            image: image,
+            videoUrl: videoUrl,
+            imageUrl: imageUrl,
             airport: airport,
             flightLink: flightLink,
             date: date);

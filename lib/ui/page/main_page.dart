@@ -182,10 +182,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                   currentCategoryIndex == y && currentPlaceIndex == x;
 
               if (active) {
-                final videoPath = categories[y].places[x].video;
+                final videoUrl = categories[y].places[x].videoUrl;
 
                 if (_videoController != null &&
-                    _videoController.dataSource == videoPath) {
+                    _videoController.dataSource == videoUrl) {
                   Log.d(_tag, "Same video path, reuse controller");
                   final videoController = _videoController;
                   _videoControllerInitializeCallback.then((_) {
@@ -200,7 +200,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                     _videoController.dispose();
                   }
 
-                  _videoController = createVideoPlayerController(videoPath);
+                  _videoController = createVideoPlayerController(videoUrl);
 
                   _videoControllerInitializeCallback =
                       _videoController.initialize();
@@ -338,7 +338,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     Navigator.pushNamed(
       context,
       PlacePage.routeName,
-      arguments: [categoryName, place, _videoController, _videoControllerInitializeCallback],
+      arguments: [
+        categoryName,
+        place,
+        _videoController,
+        _videoControllerInitializeCallback
+      ],
     );
   }
 
@@ -378,10 +383,26 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     return bottomIndex;
   }
 
-  VideoPlayerController createVideoPlayerController(String path) {
+//  Future<VideoPlayerController> createVideoPlayerController(String url) async {
+  VideoPlayerController createVideoPlayerController(String url) {
     Log.d(_tag, "Create video player controller");
-    return VideoPlayerController.network(path)
+
+//    return VideoPlayerController.file(await getVideoFileForPath(path))
+    return VideoPlayerController.network(url)
       ..setVolume(0.0)
       ..setLooping(true);
   }
+
+//  Future<File> getVideoFileForPath(String uri) async {
+//    final taskId = await FlutterDownloader.enqueue(
+//      url: 'your download link',
+//      savedDir: 'the path of directory where you want to save downloaded files',
+//      showNotification: true,
+//      // show download progress in status bar (for Android)
+//      openFileFromNotification:
+//          true, // click on notification to open downloaded file (for Android)
+//    );
+//
+//    return File(path);
+//  }
 }

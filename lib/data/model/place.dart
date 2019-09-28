@@ -16,10 +16,11 @@ abstract class Place implements Built<Place, PlaceBuilder> {
 
   double get temperature;
 
-  String get video;
+  @BuiltValueField(wireName: "video")
+  String get videoUrl;
 
-  @nullable
-  String get image;
+  @BuiltValueField(wireName: "image")
+  String get imageUrl;
 
   String get airport;
 

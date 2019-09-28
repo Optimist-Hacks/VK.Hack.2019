@@ -30,7 +30,7 @@ void main() {
     expect(openTiles.first.places.first.description, equals("description"));
     expect(openTiles.first.places.first.price, equals(10.0));
     expect(openTiles.first.places.first.temperature, equals(20.0));
-    expect(openTiles.first.places.first.video, "url");
+    expect(openTiles.first.places.first.videoUrl, "url");
     expect(openTiles.first.places.first.airport, "LED");
   });
 }
