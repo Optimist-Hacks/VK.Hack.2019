@@ -113,7 +113,7 @@ class _PlacePageState extends State<PlacePage> {
 
   Widget _temperatureAndTravelTime() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
       child: SizedBox(
         height: 64,
         child: Row(
@@ -137,10 +137,14 @@ class _PlacePageState extends State<PlacePage> {
       children: <Widget>[
         Text(
           "${widget._place.temperature.floor()}°",
-          style: TextStyle(color: GoColors.black, fontSize: 34),
+          style: TextStyle(
+            fontWeight: FontWeight.normal,
+            color: GoColors.black,
+            fontSize: 34,
+          ),
         ),
         Text(
-          "Temperature",
+          Strings.temperature,
           style: TextStyle(
             fontWeight: FontWeight.w500,
             color: GoColors.black,
