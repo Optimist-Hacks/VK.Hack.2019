@@ -25,6 +25,8 @@ class PlacePage extends StatefulWidget {
 class _PlacePageState extends State<PlacePage> {
   AviasalesService _aviasalesService;
 
+  final _scrollController = ScrollController();
+
   @override
   void didChangeDependencies() {
     _aviasalesService ??= Provider.of<AviasalesService>(context);
@@ -38,6 +40,7 @@ class _PlacePageState extends State<PlacePage> {
       body: Stack(
         children: <Widget>[
           ListView(
+            controller: _scrollController,
             children: [
               _placeCard(),
               _temperatureAndTravelTime(),
@@ -46,6 +49,19 @@ class _PlacePageState extends State<PlacePage> {
                 height: 100,
               ),
             ],
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: SizedBox(
+              height: 48,
+              child: GestureDetector(
+                onVerticalDragEnd: (details) {
+                  if (_scrollController.offset == 0) {
+                    Navigator.pop(context);
+                  }
+                },
+              ),
+            ),
           ),
           _gradient(),
           _buyTicketButton(),
