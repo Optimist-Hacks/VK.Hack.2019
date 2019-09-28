@@ -175,11 +175,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         realIndex = index % pageOffset % categories.length;
       } else {
         realIndex =
-            categories.length - (pageOffset - index) % categories.length;
+            (categories.length - (pageOffset - index)) % categories.length;
       }
 
-      if (realIndex.floor() == realIndex) {
-        currentCategoryIndexSubject.add(realIndex.floor());
+      if (realIndex.ceil() == realIndex) {
+        currentCategoryIndexSubject.add(realIndex.ceil());
         categoriesMoving = false;
 
         currentCategoryAnimationController
@@ -265,12 +265,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       if (index >= pageOffset) {
         realIndex = index % pageOffset % categories[y].places.length;
       } else {
-        realIndex = categories[y].places.length -
-            (pageOffset - index) % categories[y].places.length;
+        realIndex = (categories[y].places.length - (pageOffset - index)) % categories[y].places.length;
+
       }
 
-      if (realIndex.floor() == realIndex) {
-        currentPlaceIndexSubjects[y].add(realIndex.floor());
+      if (realIndex.ceil() == realIndex) {
+        currentPlaceIndexSubjects[y].add(realIndex.ceil());
         placesMoving = false;
 
         print("raw places index: $index, places index: $realIndex");
