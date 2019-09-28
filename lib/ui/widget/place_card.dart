@@ -120,7 +120,7 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
               _image(),
               if (widget.active &&
                   (widget.videoController?.value?.initialized ?? false))
-                _video(),
+                _video(widget.videoController.value.size),
               _gradient(),
               infoOverlay(),
               if (widget.showBottomCategoryName) bottomCategoryName(),
@@ -174,20 +174,22 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
     );
   }
 
-  Widget _video() {
+  Widget _video(Size videoSize) {
     return new LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         double containerWidth = constraints.maxWidth;
         double containerHeight = constraints.maxHeight;
         Log.d(_tag, "maxWidth = $containerWidth maxHeight = $containerHeight");
-        double size = max(containerWidth, containerHeight);
+        final height = containerHeight;
+        final width = (containerHeight / videoSize.height) * videoSize.width;
+        Log.d(_tag, "new width = $width height = $height");
         return ClipRRect(
           borderRadius: widget.roundAllBorders
               ? widget._allBorderRadius
               : widget._bottomBorderRadius,
           child: OverflowBox(
-            maxWidth: size,
-            maxHeight: size,
+            maxWidth: width,
+            maxHeight: height,
             alignment: Alignment.center,
             child: VideoPlayer(widget.videoController),
           ),
