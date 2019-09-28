@@ -18,6 +18,8 @@ abstract class Place implements Built<Place, PlaceBuilder> {
 
   String get video;
 
+  String get image;
+
   String get airport;
 
   Place._();
