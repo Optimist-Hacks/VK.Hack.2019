@@ -82,6 +82,7 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
   void dispose() {
     super.dispose();
     _videoController?.dispose();
+    _videoController = null;
   }
 
   @override
@@ -120,7 +121,9 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
             fit: StackFit.expand,
             children: <Widget>[
               _image(),
-              if (widget.active && _videoController.value.initialized) _video(),
+              if (widget.active &&
+                  (_videoController?.value?.initialized ?? false))
+                _video(),
               _gradient(),
               infoOverlay(),
               if (widget.showBottomCategoryName) bottomCategoryName(),
