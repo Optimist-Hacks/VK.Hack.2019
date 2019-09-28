@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_here/data/model/place.dart';
+import 'package:go_here/ui/colors.dart';
 import 'package:go_here/utils/log.dart';
 import 'package:video_player/video_player.dart';
 
@@ -147,7 +148,7 @@ class _PlaceCardState extends State<PlaceCard> {
           style: TextStyle(
             fontWeight: FontWeight.w500,
             fontSize: 16,
-            color: Colors.white,
+            color: GoColors.accent,
           ),
         ),
       ),
@@ -164,6 +165,7 @@ class _PlaceCardState extends State<PlaceCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             price(),
+            SizedBox(height: 9.0),
             name(),
           ],
         ),
@@ -177,7 +179,7 @@ class _PlaceCardState extends State<PlaceCard> {
       style: TextStyle(
         fontWeight: FontWeight.w500,
         fontSize: 34,
-        color: Colors.white,
+        color: GoColors.accent,
       ),
     );
   }
@@ -187,7 +189,7 @@ class _PlaceCardState extends State<PlaceCard> {
       widget.place.name,
       style: TextStyle(
         fontSize: 16,
-        color: Colors.white,
+        color: GoColors.accent,
       ),
     );
   }
