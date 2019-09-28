@@ -25,7 +25,8 @@ class App extends StatelessWidget {
       child: MaterialApp(
         title: Strings.appName,
         theme: ThemeData(
-          canvasColor: Colors.transparent,
+          backgroundColor: GoColors.accent,
+          scaffoldBackgroundColor: GoColors.accent,
           accentColor: GoColors.accent,
         ),
         routes: {
