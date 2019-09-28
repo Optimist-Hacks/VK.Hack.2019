@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:built_collection/built_collection.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -94,27 +96,31 @@ class _MainPageState extends State<MainPage> {
 
                                 final currentPlaceIndex = snapshot.data;
 
-                                print(
-                                    "create card for $x,$y, ${_getBottomCategoryIndex(categories.length) == y}");
+                                final heroTag = "${Random().nextInt(0xFFFFFFFF)}";
 
                                 return GestureDetector(
                                   onTap: () =>
-                                      _onPlaceTap(categories[y].places[x]),
-                                  child: PlaceCard(
-                                    x: x,
-                                    y: y,
-                                    categoryName: categories[y].name,
-                                    place: categories[y].places[x],
-                                    active: currentCategoryIndex == y &&
-                                        currentPlaceIndex == x,
-                                    showBottomCategoryName:
-                                        _getTopCategoryIndex(
-                                                categories.length) ==
-                                            y,
-                                    showTopCategoryName:
-                                        _getBottomCategoryIndex(
-                                                categories.length) ==
-                                            y,
+                                      _onPlaceTap(heroTag, categories[y].places[x]),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: PlaceCard(
+                                      heroTag: heroTag,
+                                      x: x,
+                                      y: y,
+                                      categoryName: categories[y].name,
+                                      place: categories[y].places[x],
+                                      active: currentCategoryIndex == y &&
+                                          currentPlaceIndex == x,
+                                      showBottomCategoryName:
+                                          _getTopCategoryIndex(
+                                                  categories.length) ==
+                                              y,
+                                      showTopCategoryName:
+                                          _getBottomCategoryIndex(
+                                                  categories.length) ==
+                                              y,
+                                      roundAllBorders: true,
+                                    ),
                                   ),
                                 );
                               },
@@ -197,9 +203,9 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  _onPlaceTap(Place place) {
+  _onPlaceTap(String heroTag, Place place) {
     Log.d(_tag, "On place tap $place");
-    Navigator.pushNamed(context, PlacePage.routeName, arguments: place);
+    Navigator.pushNamed(context, PlacePage.routeName, arguments: [heroTag, place],);
   }
 
   int _getTopCategoryIndex(int categoriesLength) {
@@ -227,8 +233,6 @@ class _MainPageState extends State<MainPage> {
 
     final currentIndex = currentCategoryIndexSubject.value;
 
-    print("raw category index: $currentIndex");
-
     int bottomIndex = currentIndex + 1;
 
     if (bottomIndex >= 0) {
@@ -236,8 +240,6 @@ class _MainPageState extends State<MainPage> {
     } else {
       bottomIndex = categoriesLength - (bottomIndex.abs()) % categoriesLength;
     }
-
-    print("bottom category index: $currentIndex");
 
     return bottomIndex;
   }

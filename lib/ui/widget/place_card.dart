@@ -11,7 +11,13 @@ const _tag = "place_card";
 final rand = Random();
 
 class PlaceCard extends StatefulWidget {
-  final _borderRadius = BorderRadius.circular(30);
+  final _allBorderRadius = BorderRadius.circular(30);
+  final _bottomBorderRadius = BorderRadius.only(
+    bottomLeft: Radius.circular(30),
+    bottomRight: Radius.circular(30),
+  );
+
+  final String heroTag;
 
   final int x;
   final int y;
@@ -22,8 +28,10 @@ class PlaceCard extends StatefulWidget {
   final bool active;
   final bool showBottomCategoryName;
   final bool showTopCategoryName;
+  final bool roundAllBorders;
 
   PlaceCard({
+    @required this.heroTag,
     @required this.x,
     @required this.y,
     @required this.categoryName,
@@ -31,6 +39,7 @@ class PlaceCard extends StatefulWidget {
     @required this.active,
     @required this.showBottomCategoryName,
     @required this.showTopCategoryName,
+    @required this.roundAllBorders,
     Key key,
   }) : super(key: key);
 
@@ -64,33 +73,42 @@ class _PlaceCardState extends State<PlaceCard> {
       _videoController?.dispose();
       _videoController = null;
     }
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: widget._borderRadius),
-      margin: EdgeInsets.all(8),
-      child: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          _image(),
-          if (widget.active && _videoController.value.initialized) _video(),
-          Container(
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Center(child: Text("${widget.x},${widget.y}")),
-              ],
+
+    return Hero(
+      tag: widget.heroTag,
+      child: Card(
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+            borderRadius: widget.roundAllBorders
+                ? widget._allBorderRadius
+                : widget._bottomBorderRadius),
+        child: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            _image(),
+            if (widget.active && _videoController.value.initialized) _video(),
+            Container(
+              child: Stack(
+                alignment: Alignment.center,
+                children: <Widget>[
+                  Center(child: Text("${widget.x},${widget.y}")),
+                ],
+              ),
             ),
-          ),
-          infoOverlay(),
-          if (widget.showBottomCategoryName) bottomCategoryName(),
-          if (widget.showTopCategoryName) topCategoryName(),
-        ],
+            infoOverlay(),
+            if (widget.showBottomCategoryName) bottomCategoryName(),
+            if (widget.showTopCategoryName) topCategoryName(),
+          ],
+        ),
       ),
     );
   }
 
   Widget _image() {
     return ClipRRect(
-      borderRadius: widget._borderRadius,
+      borderRadius: widget.roundAllBorders
+          ? widget._allBorderRadius
+          : widget._bottomBorderRadius,
       child: CachedNetworkImage(
         imageUrl:
             "https://uc17127964c991e4650563590995.dl.dropboxusercontent.com/cd/0/inline/Apbg9dhPEVOB0pfItlNi5wQimnxXIRpYXV1D6P-PgnAeB8woc20fT_98SGESb-ppUzdZWRBb01IzYBVhuGvWnfL7Rcabvq8TIbJcdcUWmalDLTN0Db8VKmzrY5mehEC9fcc/file#",
@@ -108,7 +126,9 @@ class _PlaceCardState extends State<PlaceCard> {
         Log.d(_tag, "maxWidth = $containerWidth maxHeight = $containerHeight");
         double size = max(containerWidth, containerHeight);
         return ClipRRect(
-          borderRadius: widget._borderRadius,
+          borderRadius: widget.roundAllBorders
+              ? widget._allBorderRadius
+              : widget._bottomBorderRadius,
           child: OverflowBox(
             maxWidth: size,
             maxHeight: size,
