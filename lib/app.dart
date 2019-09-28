@@ -9,8 +9,11 @@ import 'package:go_here/ui/colors.dart';
 import 'package:go_here/ui/page/main_page.dart';
 import 'package:go_here/ui/page/place_page.dart';
 import 'package:go_here/ui/strings.dart';
+import 'package:go_here/utils/log.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
+
+const _tag = "app";
 
 class App extends StatelessWidget {
   @override
@@ -25,6 +28,7 @@ class App extends StatelessWidget {
         initialData: preferencesService.currentDartMode(),
         stream: preferencesService.darkModeSubject,
         builder: (context, snapshot) {
+          Log.d(_tag, "darkMode = ${snapshot.data}");
           final goColors = GoColors(snapshot.data);
 
           return MultiProvider(

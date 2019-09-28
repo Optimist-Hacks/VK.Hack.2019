@@ -12,6 +12,7 @@ import 'package:go_here/ui/widget/place_card.dart';
 import 'package:go_here/utils/log.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shake/shake.dart';
 import 'package:video_player/video_player.dart';
 
 const _tag = "main_page";
@@ -41,6 +42,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   final currentCategoryIndexSubject = BehaviorSubject<int>.seeded(0);
   final Map<int, BehaviorSubject<int>> currentPlaceIndexSubjects = {};
 
+  PreferencesService _preferencesService;
+  ShakeDetector _shakeDetector;
+
   @override
   void initState() {
     super.initState();
@@ -57,7 +61,16 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
   @override
   void didChangeDependencies() {
+    Log.d(_tag, "didChangeDependencies");
     _placeBloc ??= Provider.of<PlaceBloc>(context);
+    _preferencesService ??= Provider.of<PreferencesService>(context);
+    _shakeDetector ??= ShakeDetector.autoStart(
+      shakeCountResetTime: 1000,
+      onPhoneShake: () {
+        Log.d(_tag, "Shake deteck");
+        _preferencesService.setDarkMode(!_preferencesService.currentDartMode());
+      },
+    );
     super.didChangeDependencies();
   }
 
@@ -221,7 +234,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                   child: Hero(
                     tag: categories[y].places[x].id,
                     child: PlaceCard(
-                      Provider.of<PreferencesService>(context),
+                      _preferencesService,
                       categoryName: categories[y].name,
                       place: categories[y].places[x],
                       active: active,

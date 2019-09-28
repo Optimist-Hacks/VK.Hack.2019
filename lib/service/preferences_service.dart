@@ -1,5 +1,8 @@
+import 'package:go_here/utils/log.dart';
 import 'package:preferences/preference_service.dart';
 import 'package:rxdart/rxdart.dart';
+
+const _tag = "preferences_service";
 
 class PreferencesService {
   static const String _likedPlaces = "LIKED_PLACES";
@@ -19,6 +22,7 @@ class PreferencesService {
     final list = getLikedPlaces();
     return list.contains(placeId);
   }
+
   void setLikedPlaces(List<String> placesIds) {
     PrefService.setStringList(_likedPlaces, placesIds);
   }
@@ -36,6 +40,7 @@ class PreferencesService {
   }
 
   void setDarkMode(bool darkMode) {
+    Log.d(_tag, "setDarkMode = $darkMode");
     PrefService.setBool(_darkMode, darkMode);
     darkModeSubject.add(darkMode);
   }
