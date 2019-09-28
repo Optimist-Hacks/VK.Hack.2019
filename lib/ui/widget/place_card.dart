@@ -179,17 +179,25 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
       builder: (BuildContext context, BoxConstraints constraints) {
         double containerWidth = constraints.maxWidth;
         double containerHeight = constraints.maxHeight;
-        Log.d(_tag, "maxWidth = $containerWidth maxHeight = $containerHeight");
-        final height = containerHeight;
-        final width = (containerHeight / videoSize.height) * videoSize.width;
-        Log.d(_tag, "new width = $width height = $height");
+        Log.d(_tag,
+            "constraints: width = $containerWidth height = $containerHeight");
+        Log.d(_tag,
+            "video: width = ${videoSize.width} height = ${videoSize.height}");
+        final xScale = containerWidth / videoSize.width;
+        final yScale = containerHeight / videoSize.height;
+        final scale = max(xScale, yScale);
+        final width = scale * videoSize.width;
+        final height = scale * videoSize.height;
+        Log.d(_tag, "new: width = $width height = $height");
         return ClipRRect(
           borderRadius: widget.roundAllBorders
               ? widget._allBorderRadius
               : widget._bottomBorderRadius,
           child: OverflowBox(
             maxWidth: width,
+            minWidth: width,
             maxHeight: height,
+            minHeight: height,
             alignment: Alignment.center,
             child: VideoPlayer(widget.videoController),
           ),
