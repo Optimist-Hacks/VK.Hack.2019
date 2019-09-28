@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_here/data/model/place.dart';
 import 'package:go_here/service/aviasales_service.dart';
+import 'package:go_here/service/preferences_service.dart';
 import 'package:go_here/ui/colors.dart';
 import 'package:go_here/ui/images.dart';
 import 'package:go_here/ui/strings.dart';
@@ -74,6 +75,7 @@ class _PlacePageState extends State<PlacePage> {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.56,
       child: PlaceCard(
+        Provider.of<PreferencesService>(context),
         x: 0,
         y: 0,
         categoryName: "anus",

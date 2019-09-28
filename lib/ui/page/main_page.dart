@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:go_here/data/model/category.dart';
 import 'package:go_here/data/model/place.dart';
 import 'package:go_here/domain/place_bloc.dart';
+import 'package:go_here/service/preferences_service.dart';
 import 'package:go_here/ui/colors.dart';
 import 'package:go_here/ui/page/place_page.dart';
 import 'package:go_here/ui/widget/place_card.dart';
@@ -235,6 +236,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: PlaceCard(
+                    Provider.of<PreferencesService>(context),
                     x: x,
                     y: y,
                     categoryName: categories[y].name,
@@ -265,8 +267,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       if (index >= pageOffset) {
         realIndex = index % pageOffset % categories[y].places.length;
       } else {
-        realIndex = (categories[y].places.length - (pageOffset - index)) % categories[y].places.length;
-
+        realIndex = (categories[y].places.length - (pageOffset - index)) %
+            categories[y].places.length;
       }
 
       if (realIndex.ceil() == realIndex) {

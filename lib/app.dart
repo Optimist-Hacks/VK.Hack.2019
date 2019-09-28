@@ -4,6 +4,7 @@ import 'package:go_here/data/repository/place_repository.dart';
 import 'package:go_here/domain/place_bloc.dart';
 import 'package:go_here/service/api_service.dart';
 import 'package:go_here/service/aviasales_service.dart';
+import 'package:go_here/service/preferences_service.dart';
 import 'package:go_here/ui/colors.dart';
 import 'package:go_here/ui/page/main_page.dart';
 import 'package:go_here/ui/page/place_page.dart';
@@ -17,10 +18,12 @@ class App extends StatelessWidget {
     final placeRepository = PlaceRepository(apiService);
     final placeBloc = PlaceBloc(placeRepository);
     final aviasalesService = AviasalesService();
+    final preferencesService = PreferencesService();
     return MultiProvider(
       providers: [
         Provider.value(value: placeBloc),
         Provider.value(value: aviasalesService),
+        Provider.value(value: preferencesService),
       ],
       child: MaterialApp(
         title: Strings.appName,
@@ -36,8 +39,7 @@ class App extends StatelessWidget {
           switch (settings.name) {
             case PlacePage.routeName:
               final Place place = settings.arguments;
-              return MaterialPageRoute(
-                  builder: (context) => PlacePage(place));
+              return MaterialPageRoute(builder: (context) => PlacePage(place));
           }
           return null;
         },

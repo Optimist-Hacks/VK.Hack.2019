@@ -410,6 +410,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.0"
+  preferences:
+    dependency: "direct main"
+    description:
+      name: preferences
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.0"
   provider:
     dependency: "direct dev"
     description:
@@ -452,6 +459,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.2+1"
+  shared_preferences:
+    dependency: transitive
+    description:
+      name: shared_preferences
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.3+4"
   shelf:
     dependency: transitive
     description:

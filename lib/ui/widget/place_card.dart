@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_here/data/model/place.dart';
+import 'package:go_here/service/preferences_service.dart';
 import 'package:go_here/ui/colors.dart';
 import 'package:go_here/ui/images.dart';
 import 'package:go_here/utils/log.dart';
@@ -15,6 +16,7 @@ const _tag = "place_card";
 final rand = Random();
 
 class PlaceCard extends StatefulWidget {
+  final PreferencesService _preferencesService;
   final _allBorderRadius = BorderRadius.circular(30);
   final _bottomBorderRadius = BorderRadius.only(
     bottomLeft: Radius.circular(30),
@@ -32,7 +34,8 @@ class PlaceCard extends StatefulWidget {
   final bool showTopCategoryName;
   final bool roundAllBorders;
 
-  PlaceCard({
+  PlaceCard(
+    this._preferencesService, {
     @required this.x,
     @required this.y,
     @required this.categoryName,
@@ -54,7 +57,6 @@ class _PlaceCardState extends State<PlaceCard> {
   @override
   void initState() {
     super.initState();
-
     if (widget.active) {
       _videoController = createVideoPlayerController();
     }
@@ -169,7 +171,7 @@ class _PlaceCardState extends State<PlaceCard> {
     );
   }
 
-  Widget weather() {
+  Widget _weather() {
     return Align(
       alignment: Alignment.topLeft,
       child: Padding(
@@ -186,7 +188,7 @@ class _PlaceCardState extends State<PlaceCard> {
     );
   }
 
-  Widget priceAndName() {
+  Widget _priceAndName() {
     return Align(
       alignment: Alignment.bottomLeft,
       child: Padding(
@@ -231,15 +233,32 @@ class _PlaceCardState extends State<PlaceCard> {
       duration: Duration(milliseconds: 500),
       child: Stack(
         children: <Widget>[
-          weather(),
-          priceAndName(),
-          if (!widget.roundAllBorders) shareButton(),
+          if (widget._preferencesService.isLiked(widget.place.id)) _heart(),
+          _weather(),
+          _priceAndName(),
+          if (!widget.roundAllBorders) _shareButton(),
         ],
       ),
     );
   }
 
-  Widget shareButton() {
+  Widget _heart() {
+    return Align(
+      alignment: Alignment.topRight,
+      child: Padding(
+        padding: EdgeInsets.all(25.0),
+        child: SvgPicture.asset(
+          Images.heart,
+          fit: BoxFit.cover,
+          height: 16,
+          width: 16,
+          color: GoColors.accent,
+        ),
+      ),
+    );
+  }
+
+  Widget _shareButton() {
     return Align(
       alignment: Alignment.bottomRight,
       child: Padding(
