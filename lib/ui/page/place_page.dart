@@ -52,14 +52,26 @@ class _PlacePageState extends State<PlacePage> {
           ),
           Align(
             alignment: Alignment.topCenter,
-            child: SizedBox(
-              height: 48,
-              child: GestureDetector(
-                onVerticalDragEnd: (details) {
-                  if (_scrollController.offset == 0) {
-                    Navigator.pop(context);
-                  }
-                },
+            child: GestureDetector(
+              onVerticalDragEnd: (details) {
+                if (_scrollController.offset == 0) {
+                  Navigator.pop(context);
+                }
+              },
+              child: Container(
+                color: Colors.transparent,
+                child: SizedBox(
+                  height: 100,
+                  child: Center(
+                    child: SvgPicture.asset(
+                      Images.downArrow,
+                      fit: BoxFit.contain,
+                      height: 9,
+                      width: 26,
+                      color: GoColors.accent,
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
