@@ -445,6 +445,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.22.2"
+  share:
+    dependency: "direct main"
+    description:
+      name: share
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.2+1"
   shelf:
     dependency: transitive
     description:
@@ -606,4 +613,4 @@ packages:
     version: "2.2.0"
 sdks:
   dart: ">=2.4.0 <3.0.0"
-  flutter: ">=1.5.9-pre.94 <2.0.0"
+  flutter: ">=1.6.0 <2.0.0"

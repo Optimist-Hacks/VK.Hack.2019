@@ -8,6 +8,7 @@ import 'package:go_here/data/model/place.dart';
 import 'package:go_here/ui/colors.dart';
 import 'package:go_here/ui/images.dart';
 import 'package:go_here/utils/log.dart';
+import 'package:share/share.dart';
 import 'package:video_player/video_player.dart';
 
 const _tag = "place_card";
@@ -309,5 +310,7 @@ class _PlaceCardState extends State<PlaceCard> {
 
   void _onSharePress() {
     Log.d(_tag, "On share press");
+    Share.share(
+        "Wow!\n\nTickeets to ${widget.place.name} are only ${widget.place.price.floor()}\$\n\nLet's go here!\n\n${widget.place.video}");
   }
 }
