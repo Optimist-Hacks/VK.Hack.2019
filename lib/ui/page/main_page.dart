@@ -41,7 +41,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    currentCategoryAnimationController ??= AnimationController(
+    currentCategoryAnimationController = AnimationController(
       duration: Duration(milliseconds: 500),
       vsync: this,
     );
@@ -74,63 +74,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
               _verticalCarousel(categories),
               _currentCategory(categories),
             ],
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _currentCategory(BuiltList<Category> categories) {
-    final animation =
-        Tween(begin: 0.0, end: 1.0).animate(currentCategoryAnimationController);
-
-    return Align(
-      alignment: Alignment.center,
-      child: StreamBuilder<int>(
-        stream: currentCategoryIndexSubject,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Container();
-          }
-
-          final currentCategory = snapshot.data;
-
-          if (currentCategory == -1) {
-            return Container();
-          }
-
-          final categoryName = categories[snapshot.data].name;
-
-          return IgnorePointer(
-            child: AnimatedBuilder(
-              animation: animation,
-              builder: (context, child) {
-                double opacity;
-
-                if (animation.value <= 0.5) {
-                  opacity = animation.value;
-                } else {
-                  opacity = 0.5 - (animation.value - 0.5);
-                }
-
-                return Opacity(
-                  opacity: opacity,
-                  child: Transform.scale(
-                    scale: animation.value,
-                    child: child,
-                  ),
-                );
-              },
-              child: Text(
-                categoryName.toUpperCase(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: GoColors.accent,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 72,
-                ),
-              ),
-            ),
           );
         },
       ),
@@ -287,6 +230,63 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     });
 
     return placesCarousel;
+  }
+
+  Widget _currentCategory(BuiltList<Category> categories) {
+    final animation =
+    Tween(begin: 0.0, end: 1.0).animate(currentCategoryAnimationController);
+
+    return Align(
+      alignment: Alignment.center,
+      child: StreamBuilder<int>(
+        stream: currentCategoryIndexSubject,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Container();
+          }
+
+          final currentCategory = snapshot.data;
+
+          if (currentCategory == -1) {
+            return Container();
+          }
+
+          final categoryName = categories[snapshot.data].name;
+
+          return IgnorePointer(
+            child: AnimatedBuilder(
+              animation: animation,
+              builder: (context, child) {
+                double opacity;
+
+                if (animation.value <= 0.5) {
+                  opacity = animation.value;
+                } else {
+                  opacity = 0.5 - (animation.value - 0.5);
+                }
+
+                return Opacity(
+                  opacity: opacity,
+                  child: Transform.scale(
+                    scale: animation.value,
+                    child: child,
+                  ),
+                );
+              },
+              child: Text(
+                categoryName.toUpperCase(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: GoColors.accent,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 72,
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 
   _onPlaceTap(Place place) {

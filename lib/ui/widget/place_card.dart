@@ -51,8 +51,10 @@ class PlaceCard extends StatefulWidget {
   _PlaceCardState createState() => _PlaceCardState();
 }
 
-class _PlaceCardState extends State<PlaceCard> {
+class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
   VideoPlayerController _videoController;
+
+  AnimationController heartAnimationController;
 
   @override
   void initState() {
@@ -60,6 +62,11 @@ class _PlaceCardState extends State<PlaceCard> {
     if (widget.active) {
       _videoController = createVideoPlayerController();
     }
+
+    heartAnimationController = AnimationController(
+      duration: Duration(milliseconds: 500),
+      vsync: this,
+    );
   }
 
   @override
@@ -79,30 +86,30 @@ class _PlaceCardState extends State<PlaceCard> {
 
     return Hero(
       tag: widget.place.id,
-      child: Card(
-        margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(
-            borderRadius: widget.roundAllBorders
-                ? widget._allBorderRadius
-                : widget._bottomBorderRadius),
-        child: Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            _image(),
-            if (widget.active && _videoController.value.initialized) _video(),
-            Container(
-              child: Stack(
-                alignment: Alignment.center,
-                children: <Widget>[
-                  Center(child: Text("${widget.x},${widget.y}")),
-                ],
-              ),
-            ),
-            _gradient(),
-            infoOverlay(),
-            if (widget.showBottomCategoryName) bottomCategoryName(),
-            if (widget.showTopCategoryName) topCategoryName(),
-          ],
+      child: GestureDetector(
+        onDoubleTap: () {
+          heartAnimationController
+            ..reset()
+            ..forward();
+        },
+        child: Card(
+          margin: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+              borderRadius: widget.roundAllBorders
+                  ? widget._allBorderRadius
+                  : widget._bottomBorderRadius),
+          child: Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              _image(),
+              if (widget.active && _videoController.value.initialized) _video(),
+              _gradient(),
+              infoOverlay(),
+              if (widget.showBottomCategoryName) bottomCategoryName(),
+              if (widget.showTopCategoryName) topCategoryName(),
+              _heartAnimation(),
+            ],
+          ),
         ),
       ),
     );
@@ -331,5 +338,47 @@ class _PlaceCardState extends State<PlaceCard> {
     Log.d(_tag, "On share press");
     Share.share(
         "Wow!\n\nTickeets to ${widget.place.name} are only ${widget.place.price.floor()}\$\n\nLet's go here!\n\n${widget.place.video}");
+  }
+
+  Widget _heartAnimation() {
+    return Align(
+      alignment: Alignment.center,
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          double containerWidth = constraints.maxWidth;
+
+          final animation =
+              Tween(begin: 0.0, end: 1.0).animate(heartAnimationController);
+
+          return IgnorePointer(
+            child: AnimatedBuilder(
+              animation: animation,
+              builder: (context, child) {
+                double opacity;
+
+                if (animation.value <= 0.5) {
+                  opacity = animation.value;
+                } else {
+                  opacity = 0.5 - (animation.value - 0.5);
+                }
+
+                return Opacity(
+                  opacity: opacity,
+                  child: Transform.scale(
+                    scale: animation.value,
+                    child: child,
+                  ),
+                );
+              },
+              child: Icon(
+                Icons.favorite,
+                size: containerWidth,
+                color: GoColors.accent,
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 }
