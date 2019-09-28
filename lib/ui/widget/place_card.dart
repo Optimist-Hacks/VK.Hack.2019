@@ -280,7 +280,7 @@ class _PlaceCardState extends State<PlaceCard> {
 
   Widget categoryName() {
     return Padding(
-      padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.all(20.0),
       child: Opacity(
         opacity: 0.67,
         child: Text(
@@ -288,7 +288,7 @@ class _PlaceCardState extends State<PlaceCard> {
           style: TextStyle(
             fontWeight: FontWeight.w900,
             fontSize: 24,
-            color: Colors.white,
+            color: GoColors.accent,
           ),
         ),
       ),
