@@ -110,14 +110,22 @@ class _PlaceCardState extends State<PlaceCard> {
       alignment: Alignment.bottomCenter,
       child: Opacity(
         opacity: 0.7,
-        child: Container(
-          height: 197.0,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: FractionalOffset.topCenter,
-              end: FractionalOffset.bottomCenter,
-              colors: [GoColors.placeGradientStart, GoColors.placeGradientEnd],
-              stops: [0.0, 1.0],
+        child: ClipRRect(
+          borderRadius: widget.roundAllBorders
+              ? widget._allBorderRadius
+              : widget._bottomBorderRadius,
+          child: Container(
+            height: 197.0,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: FractionalOffset.topCenter,
+                end: FractionalOffset.bottomCenter,
+                colors: [
+                  GoColors.placeGradientStart,
+                  GoColors.placeGradientEnd
+                ],
+                stops: [0.0, 1.0],
+              ),
             ),
           ),
         ),
