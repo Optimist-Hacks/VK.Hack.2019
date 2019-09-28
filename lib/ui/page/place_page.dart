@@ -160,10 +160,11 @@ class _PlacePageState extends State<PlacePage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Icon(
-          Icons.access_time,
-          color: GoColors.black,
-          size: 36,
+        SvgPicture.asset(
+          Images.clock,
+          fit: BoxFit.cover,
+          height: 27,
+          width: 27,
         ),
         Text(
           "In 2 days 1h",
@@ -179,13 +180,14 @@ class _PlacePageState extends State<PlacePage> {
 
   Widget _description() {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
       child: Text(
         widget._place.description,
         textAlign: TextAlign.left,
         style: TextStyle(
+          fontWeight: FontWeight.normal,
           color: GoColors.black,
-          fontSize: 16.0,
+          fontSize: 17.0,
         ),
       ),
     );
