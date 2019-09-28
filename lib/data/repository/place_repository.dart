@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:built_collection/built_collection.dart';
 import 'package:go_here/data/model/category.dart';
 import 'package:go_here/data/model/place.dart';
@@ -23,6 +25,7 @@ class PlaceRepository {
     final realCategories = await _apiService.getPlaces();
 //    Log.d(_tag, "${categories.length} categories retrieved");
 
+    final rand = Random();
     final categories = List.generate(5, (i) {
       final places = List.generate(5, (j) {
         return Place((b) => b
@@ -33,7 +36,7 @@ class PlaceRepository {
           ..description =
               "Description, laksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdja laksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdjalaksjdlkajs al;ksdjalk laskndjlka lkajslkdja"
           ..airport = "Airport"
-          ..video = "video"
+          ..video = rand.nextBool() ? "https://dropbox.com/s/t2t78zeu68ek24d/video.mp4?raw=1" : "https://www.dropbox.com/s/qeu9h52x0lnz7vg/mountains1.mp4?raw=1"
           ..flightLink = "http://google.com"
           ..date = "2019-10-10");
       });

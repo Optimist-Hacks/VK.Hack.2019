@@ -12,6 +12,7 @@ import 'package:go_here/ui/widget/place_card.dart';
 import 'package:go_here/utils/log.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:video_player/video_player.dart';
 
 const _tag = "main_page";
 
@@ -24,6 +25,9 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   static const pageOffset = 10000;
+
+  VideoPlayerController _videoController;
+  Future<void> _videoControllerInitializeCallback;
 
   AnimationController currentCategoryAnimationController;
 
@@ -174,20 +178,62 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
               final currentPlaceIndex = snapshot.data;
 
+              final active =
+                  currentCategoryIndex == y && currentPlaceIndex == x;
+
+              if (active) {
+                final videoPath = categories[y].places[x].video;
+
+                if (_videoController != null &&
+                    _videoController.dataSource == videoPath) {
+                  Log.d(_tag, "Same video path, reuse controller");
+                  final videoController = _videoController;
+                  _videoControllerInitializeCallback.then((_) {
+                    Log.d(_tag, "Controller initialized");
+                    videoController.play();
+                  });
+                } else {
+                  Log.d(_tag, "Different video path");
+
+                  if (_videoController != null) {
+                    Log.d(_tag, "Dispose previous video controller");
+                    _videoController.dispose();
+                  }
+
+                  _videoController = createVideoPlayerController(videoPath);
+
+                  _videoControllerInitializeCallback =
+                      _videoController.initialize();
+
+                  final videoController = _videoController;
+                  _videoControllerInitializeCallback.then((_) {
+                    Log.d(_tag, "Controller initialized");
+                    videoController.play();
+                  });
+                }
+              }
+
               return GestureDetector(
-                onTap: () => _onPlaceTap(categories[y].places[x]),
+                onTap: () =>
+                    _onPlaceTap(categories[y].name, categories[y].places[x]),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: PlaceCard(
-                    Provider.of<PreferencesService>(context),
-                    categoryName: categories[y].name,
-                    place: categories[y].places[x],
-                    active: currentCategoryIndex == y && currentPlaceIndex == x,
-                    showBottomCategoryName:
-                        _getTopCategoryIndex(categories.length) == y,
-                    showTopCategoryName:
-                        _getBottomCategoryIndex(categories.length) == y,
-                    roundAllBorders: true,
+                  child: Hero(
+                    tag: categories[y].places[x].id,
+                    child: PlaceCard(
+                      Provider.of<PreferencesService>(context),
+                      categoryName: categories[y].name,
+                      place: categories[y].places[x],
+                      active: active,
+                      videoController: active ? _videoController : null,
+                      videoControllerInitializeCallback:
+                          active ? _videoControllerInitializeCallback : null,
+                      showBottomCategoryName:
+                          _getTopCategoryIndex(categories.length) == y,
+                      showTopCategoryName:
+                          _getBottomCategoryIndex(categories.length) == y,
+                      roundAllBorders: true,
+                    ),
                   ),
                 ),
               );
@@ -232,7 +278,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
   Widget _currentCategory(BuiltList<Category> categories) {
     final animation =
-    Tween(begin: 0.0, end: 1.0).animate(currentCategoryAnimationController);
+        Tween(begin: 0.0, end: 1.0).animate(currentCategoryAnimationController);
 
     return Align(
       alignment: Alignment.center,
@@ -287,12 +333,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     );
   }
 
-  _onPlaceTap(Place place) {
+  _onPlaceTap(String categoryName, Place place) {
     Log.d(_tag, "On place tap $place");
     Navigator.pushNamed(
       context,
       PlacePage.routeName,
-      arguments: place,
+      arguments: [categoryName, place, _videoController, _videoControllerInitializeCallback],
     );
   }
 
@@ -330,5 +376,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     }
 
     return bottomIndex;
+  }
+
+  VideoPlayerController createVideoPlayerController(String path) {
+    Log.d(_tag, "Create video player controller");
+    return VideoPlayerController.network(path)
+      ..setVolume(0.0)
+      ..setLooping(true);
   }
 }

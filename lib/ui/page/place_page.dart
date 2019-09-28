@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_here/data/model/category.dart';
 import 'package:go_here/data/model/place.dart';
 import 'package:go_here/service/aviasales_service.dart';
 import 'package:go_here/service/preferences_service.dart';
@@ -10,14 +11,19 @@ import 'package:go_here/ui/widget/place_card.dart';
 import 'package:go_here/utils/dates.dart';
 import 'package:go_here/utils/log.dart';
 import 'package:provider/provider.dart';
+import 'package:video_player/video_player.dart';
 
 const _tag = "place_page";
 
 class PlacePage extends StatefulWidget {
   static const routeName = '/place';
-  final Place _place;
 
-  const PlacePage(this._place);
+  final String _categoryName;
+  final Place _place;
+  final VideoPlayerController _videoController;
+  final Future<void> _videoControllerInitializeCallback;
+
+  const PlacePage(this._categoryName, this._place, this._videoController, this._videoControllerInitializeCallback);
 
   @override
   _PlacePageState createState() => _PlacePageState();
@@ -104,14 +110,19 @@ class _PlacePageState extends State<PlacePage> {
   Widget _placeCard() {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.56,
-      child: PlaceCard(
-        Provider.of<PreferencesService>(context),
-        categoryName: "anus",
-        place: widget._place,
-        active: true,
-        showBottomCategoryName: false,
-        showTopCategoryName: false,
-        roundAllBorders: false,
+      child: Hero(
+        tag: widget._place.id,
+        child: PlaceCard(
+          Provider.of<PreferencesService>(context),
+          categoryName: widget._categoryName,
+          place: widget._place,
+          active: true,
+          videoController: widget._videoController,
+          videoControllerInitializeCallback: widget._videoControllerInitializeCallback,
+          showBottomCategoryName: false,
+          showTopCategoryName: false,
+          roundAllBorders: false,
+        ),
       ),
     );
   }

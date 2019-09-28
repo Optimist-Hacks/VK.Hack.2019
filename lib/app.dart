@@ -10,6 +10,7 @@ import 'package:go_here/ui/page/main_page.dart';
 import 'package:go_here/ui/page/place_page.dart';
 import 'package:go_here/ui/strings.dart';
 import 'package:provider/provider.dart';
+import 'package:video_player/video_player.dart';
 
 class App extends StatelessWidget {
   @override
@@ -38,8 +39,11 @@ class App extends StatelessWidget {
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case PlacePage.routeName:
-              final Place place = settings.arguments;
-              return MaterialPageRoute(builder: (context) => PlacePage(place));
+              final String categoryName = (settings.arguments as List) [0];
+              final Place place = (settings.arguments as List) [1];
+              final VideoPlayerController videoController = (settings.arguments as List) [2];
+              final Future<void> videoControllerInitializeCallback = (settings.arguments as List) [3];
+              return MaterialPageRoute(builder: (context) => PlacePage(categoryName, place, videoController, videoControllerInitializeCallback));
           }
           return null;
         },

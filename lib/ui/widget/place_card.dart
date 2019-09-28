@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -28,6 +27,10 @@ class PlaceCard extends StatefulWidget {
   final Place place;
 
   final bool active;
+
+  final VideoPlayerController videoController;
+  final Future<void> videoControllerInitializeCallback;
+
   final bool showBottomCategoryName;
   final bool showTopCategoryName;
   final bool roundAllBorders;
@@ -37,6 +40,8 @@ class PlaceCard extends StatefulWidget {
     @required this.categoryName,
     @required this.place,
     @required this.active,
+    @required this.videoController,
+    @required this.videoControllerInitializeCallback,
     @required this.showBottomCategoryName,
     @required this.showTopCategoryName,
     @required this.roundAllBorders,
@@ -48,8 +53,6 @@ class PlaceCard extends StatefulWidget {
 }
 
 class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
-  VideoPlayerController _videoController;
-
   AnimationController heartAnimationController;
 
   bool liked;
@@ -57,12 +60,6 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    if (widget.active) {
-      if (Platform.isAndroid) {
-        _videoController = createVideoPlayerController();
-      }
-    }
-
     heartAnimationController = AnimationController(
       duration: Duration(milliseconds: 500),
       vsync: this,
@@ -74,63 +71,62 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
     super.didChangeDependencies();
 
     liked = widget._preferencesService.isLiked(widget.place.id);
+
+    if (widget.videoControllerInitializeCallback != null) {
+      widget.videoControllerInitializeCallback.then((_) {
+        setState(() {});
+      });
+    }
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    _videoController?.dispose();
-    _videoController = null;
+  void didUpdateWidget(PlaceCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.videoControllerInitializeCallback != null) {
+      widget.videoControllerInitializeCallback.then((_) {
+        setState(() {});
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.active) {
-      _videoController ??= createVideoPlayerController();
-    } else {
-      _videoController?.dispose();
-      _videoController = null;
-    }
-
     return Scaffold(
-      body: Hero(
-        tag: widget.place.id,
-        child: GestureDetector(
-          onDoubleTap: () {
-            if (widget._preferencesService.isLiked(widget.place.id)) {
-              widget._preferencesService.removeLikedPlace(widget.place.id);
-            } else {
-              heartAnimationController
-                ..reset()
-                ..forward();
-              widget._preferencesService.addLikedPlace(widget.place.id);
-            }
+      body: GestureDetector(
+        onDoubleTap: () {
+          if (widget._preferencesService.isLiked(widget.place.id)) {
+            widget._preferencesService.removeLikedPlace(widget.place.id);
+          } else {
+            heartAnimationController
+              ..reset()
+              ..forward();
+            widget._preferencesService.addLikedPlace(widget.place.id);
+          }
 
-            setState(() {
-              liked = widget._preferencesService.isLiked(widget.place.id);
-            });
-          },
-          child: Card(
-            margin: EdgeInsets.zero,
-            shape: RoundedRectangleBorder(
-                borderRadius: widget.roundAllBorders
-                    ? widget._allBorderRadius
-                    : widget._bottomBorderRadius),
-            child: Stack(
-              fit: StackFit.expand,
-              children: <Widget>[
-                _image(),
-                if (widget.active &&
-                    (_videoController?.value?.initialized ?? false) &&
-                    Platform.isAndroid)
-                  _video(),
-                _gradient(),
-                infoOverlay(),
-                if (widget.showBottomCategoryName) bottomCategoryName(),
-                if (widget.showTopCategoryName) topCategoryName(),
-                _heartAnimation(),
-              ],
-            ),
+          setState(() {
+            liked = widget._preferencesService.isLiked(widget.place.id);
+          });
+        },
+        child: Card(
+          margin: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+              borderRadius: widget.roundAllBorders
+                  ? widget._allBorderRadius
+                  : widget._bottomBorderRadius),
+          child: Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              _image(),
+              if (widget.active &&
+                  (widget.videoController?.value?.initialized ?? false))
+                _video(),
+              _gradient(),
+              infoOverlay(),
+              if (widget.showBottomCategoryName) bottomCategoryName(),
+              if (widget.showTopCategoryName) topCategoryName(),
+              _heartAnimation(),
+            ],
           ),
         ),
       ),
@@ -193,7 +189,7 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
             maxWidth: size,
             maxHeight: size,
             alignment: Alignment.center,
-            child: VideoPlayer(_videoController),
+            child: VideoPlayer(widget.videoController),
           ),
         );
       },
@@ -341,19 +337,6 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
         ),
       ),
     );
-  }
-
-  VideoPlayerController createVideoPlayerController() {
-    Log.d(_tag, "Creaate video player controllere");
-    return VideoPlayerController.network(
-        'https://dropbox.com/s/t2t78zeu68ek24d/video.mp4?raw=1')
-      ..setVolume(0.0)
-      ..setLooping(true)
-      ..initialize().then((_) {
-        Log.d(_tag, "Controller initialized");
-        setState(() {});
-        _videoController?.play();
-      });
   }
 
   void _onSharePress() {
