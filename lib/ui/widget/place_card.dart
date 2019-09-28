@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_here/data/model/place.dart';
@@ -67,11 +68,16 @@ class _PlaceCardState extends State<PlaceCard> {
       shape: RoundedRectangleBorder(borderRadius: widget._borderRadius),
       margin: EdgeInsets.all(8),
       child: Stack(
+        fit: StackFit.expand,
         children: <Widget>[
-          if (widget.active) video(),
+          _image(),
+          if (widget.active && _videoController.value.initialized) _video(),
           Container(
-            child: Center(
-              child: Text("${widget.x},${widget.y}"),
+            child: Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                Center(child: Text("${widget.x},${widget.y}")),
+              ],
             ),
           ),
           infoOverlay(),
@@ -82,13 +88,19 @@ class _PlaceCardState extends State<PlaceCard> {
     );
   }
 
-  Widget video() {
-    return _videoController.value.initialized
-        ? _centerCropVideo()
-        : Container(color: Colors.blueGrey);
+  Widget _image() {
+    return ClipRRect(
+      borderRadius: widget._borderRadius,
+      child: CachedNetworkImage(
+        imageUrl:
+            "https://uc17127964c991e4650563590995.dl.dropboxusercontent.com/cd/0/inline/Apbg9dhPEVOB0pfItlNi5wQimnxXIRpYXV1D6P-PgnAeB8woc20fT_98SGESb-ppUzdZWRBb01IzYBVhuGvWnfL7Rcabvq8TIbJcdcUWmalDLTN0Db8VKmzrY5mehEC9fcc/file#",
+        alignment: Alignment.center,
+        fit: BoxFit.cover,
+      ),
+    );
   }
 
-  Widget _centerCropVideo() {
+  Widget _video() {
     return new LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         double containerWidth = constraints.maxWidth;
