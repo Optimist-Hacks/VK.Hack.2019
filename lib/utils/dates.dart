@@ -7,7 +7,14 @@ class Dates {
     final dateTime = _dateFormat.parse(original);
     final duration = dateTime.difference(DateTime.now());
     final days = duration.inDays;
-    final hours = duration.inHours - days * 24;
+
+    if (dateTime.day == DateTime.now().day) {
+      return "Today";
+    }
+
+    if (dateTime.day == DateTime.now().add(Duration(days: 1)).day) {
+      return "Tomorrow";
+    }
 
     String result = "In ";
     if (days > 0) {
@@ -17,9 +24,7 @@ class Dates {
         result += "$days days ";
       }
     }
-    if (hours >= 0) {
-      result += "$hours h";
-    }
+
     return result;
   }
 }
