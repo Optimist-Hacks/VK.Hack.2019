@@ -42,6 +42,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   final currentCategoryIndexSubject = BehaviorSubject<int>.seeded(0);
   final Map<int, BehaviorSubject<int>> currentPlaceIndexSubjects = {};
 
+  final nearestCurrentCategoryIndexSubject = BehaviorSubject<int>.seeded(0);
+  final Map<int, BehaviorSubject<int>> nearestCurrentPlaceIndexSubjects = {};
+
   PreferencesService _preferencesService;
   ShakeDetector _shakeDetector;
 
@@ -87,6 +90,35 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
           final categories = snapshot.data;
 
+          for (int y = 0; y < categories.length; y++) {
+            nearestCurrentPlaceIndexSubjects[y] ??=
+                BehaviorSubject<int>.seeded(0);
+            currentPlaceIndexSubjects[y] ??= BehaviorSubject<int>.seeded(0);
+          }
+
+          nearestCurrentCategoryIndexSubject.listen((y) async {
+            nearestCurrentPlaceIndexSubjects[y].listen((x) async {
+              final videoUrl = categories[y].places[x].videoUrl;
+
+              if (_videoController != null &&
+                  _videoController.dataSource == videoUrl) {
+                Log.d(_tag, "Same video path, reuse controller");
+              } else {
+                Log.d(_tag, "Different video path");
+
+                if (_videoController != null) {
+                  Log.d(_tag, "Dispose previous video controller");
+                  _videoController.dispose();
+                }
+
+                _videoController = createVideoPlayerController(videoUrl);
+
+                _videoControllerInitializeCallback =
+                    _videoController.initialize();
+              }
+            });
+          });
+
           return Stack(
             children: [
               _verticalCarousel(categories),
@@ -99,14 +131,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   Widget _verticalCarousel(BuiltList<Category> categories) {
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
 
     final categoriesCarousel = CarouselSlider(
       aspectRatio: width / height,
@@ -146,6 +172,20 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             (categories.length - (pageOffset - index)) % categories.length;
       }
 
+      int nearestIndex;
+      if (realIndex - realIndex.floor() <= 0.5) {
+        nearestIndex = realIndex.floor();
+      } else {
+        nearestIndex = realIndex.ceil();
+      }
+
+      nearestIndex %= categories.length;
+
+      if (nearestIndex != nearestCurrentCategoryIndexSubject.value) {
+        Log.d(_tag, "Set category nearestIndex to $nearestIndex");
+        nearestCurrentCategoryIndexSubject.add(nearestIndex);
+      }
+
       if (realIndex.ceil() == realIndex) {
         currentCategoryIndexSubject.add(realIndex.ceil());
         categoriesMoving = false;
@@ -168,25 +208,22 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     return categoriesCarousel;
   }
 
-  Widget _horizontalCarousel(int y,
-      BuiltList<Category> categories,
-      int currentCategoryIndex,) {
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
-
-    currentPlaceIndexSubjects[y] ??= BehaviorSubject<int>.seeded(0);
+  Widget _horizontalCarousel(
+    int y,
+    BuiltList<Category> categories,
+    int currentCategoryIndex,
+  ) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
 
     final initialPage = currentPlaceIndexSubjects[y].value == -1
         ? 0
         : currentPlaceIndexSubjects[y].value;
 
     final placesCarousel = CarouselSlider(
+      scrollPhysics: y == currentCategoryIndex
+          ? PageScrollPhysics()
+          : NeverScrollableScrollPhysics(),
       viewportFraction: 0.875,
       aspectRatio: width / height,
       scrollDirection: Axis.horizontal,
@@ -205,34 +242,22 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
               final active =
                   currentCategoryIndex == y && currentPlaceIndex == x;
 
-              if (active) {
-                final videoUrl = categories[y].places[x].videoUrl;
+              if (active && _videoController != null) {
+                final videoController = _videoController;
+                _videoControllerInitializeCallback.then((_) {
+                  Log.d(_tag, "Controller initialized");
+                  videoController.play();
+                });
+              }
 
+              if (currentCategoryIndex == -1 || currentPlaceIndex == -1) {
                 if (_videoController != null &&
-                    _videoController.dataSource == videoUrl) {
-                  Log.d(_tag, "Same video path, reuse controller");
+                    _videoControllerInitializeCallback != null) {
                   final videoController = _videoController;
+
                   _videoControllerInitializeCallback.then((_) {
-                    Log.d(_tag, "Controller initialized");
-                    videoController.play();
-                  });
-                } else {
-                  Log.d(_tag, "Different video path");
-
-                  if (_videoController != null) {
-                    Log.d(_tag, "Dispose previous video controller");
-                    _videoController.dispose();
-                  }
-
-                  _videoController = createVideoPlayerController(videoUrl);
-
-                  _videoControllerInitializeCallback =
-                      _videoController.initialize();
-
-                  final videoController = _videoController;
-                  _videoControllerInitializeCallback.then((_) {
-                    Log.d(_tag, "Controller initialized");
-                    videoController.play();
+                    videoController.pause();
+                    videoController.seekTo(Duration(seconds: 0));
                   });
                 }
               }
@@ -253,11 +278,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       active: active,
                       videoController: active ? _videoController : null,
                       videoControllerInitializeCallback:
-                      active ? _videoControllerInitializeCallback : null,
+                          active ? _videoControllerInitializeCallback : null,
                       showBottomCategoryName:
-                      _getTopCategoryIndex(categories.length) == y,
+                          _getTopCategoryIndex(categories.length) == y,
                       showTopCategoryName:
-                      _getBottomCategoryIndex(categories.length) == y,
+                          _getBottomCategoryIndex(categories.length) == y,
                       roundAllBorders: true,
                     ),
                   ),
@@ -284,6 +309,20 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             categories[y].places.length;
       }
 
+      int nearestIndex;
+      if (realIndex - realIndex.floor() <= 0.5) {
+        nearestIndex = realIndex.floor();
+      } else {
+        nearestIndex = realIndex.ceil();
+      }
+
+      nearestIndex %= categories[y].places.length;
+
+      if (nearestIndex != nearestCurrentPlaceIndexSubjects[y].value) {
+        Log.d(_tag, "Set places nearestIndex to $nearestIndex");
+        nearestCurrentPlaceIndexSubjects[y].add(nearestIndex);
+      }
+
       if (realIndex.ceil() == realIndex) {
         currentPlaceIndexSubjects[y].add(realIndex.ceil());
         placesMoving = false;
@@ -304,7 +343,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
   Widget _currentCategory(BuiltList<Category> categories) {
     final animation =
-    Tween(begin: 0.0, end: 1.0).animate(currentCategoryAnimationController);
+        Tween(begin: 0.0, end: 1.0).animate(currentCategoryAnimationController);
 
     return Align(
       alignment: Alignment.center,
@@ -347,9 +386,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 categoryName.toUpperCase(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Provider
-                      .of<GoColors>(context)
-                      .cardTextColor,
+                  color: Provider.of<GoColors>(context).cardTextColor,
                   fontWeight: FontWeight.w900,
                   fontSize: 72,
                 ),
