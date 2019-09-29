@@ -49,38 +49,13 @@ class _PlacePageState extends State<PlacePage> {
             padding: EdgeInsets.zero,
             controller: _scrollController,
             children: [
-              _placeCard(),
+              _placeCardAndCloseArrow(),
               _temperatureAndTravelTime(),
               _description(),
               SizedBox(
                 height: 100,
               ),
             ],
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: GestureDetector(
-              onVerticalDragEnd: (details) {
-                if (_scrollController.offset == 0) {
-                  Navigator.pop(context);
-                }
-              },
-              child: Container(
-                color: Colors.transparent,
-                child: SizedBox(
-                  height: 100,
-                  child: Center(
-                    child: SvgPicture.asset(
-                      Images.downArrow,
-                      fit: BoxFit.contain,
-                      height: 9,
-                      width: 26,
-                      color: Provider.of<GoColors>(context).cardTextColor,
-                    ),
-                  ),
-                ),
-              ),
-            ),
           ),
           _gradient(),
           _buyTicketButton(),
@@ -109,23 +84,60 @@ class _PlacePageState extends State<PlacePage> {
     );
   }
 
-  Widget _placeCard() {
+  Widget _placeCardAndCloseArrow() {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.56,
-      child: Hero(
-        tag: widget._place.id,
-        child: PlaceCard(
-          Provider.of<PreferencesService>(context),
-          categoryName: widget._categoryName,
-          place: widget._place,
-          active: true,
-          videoController: widget._videoController,
-          videoControllerInitializeCallback:
-              widget._videoControllerInitializeCallback,
-          showBottomCategoryName: false,
-          showTopCategoryName: false,
-          roundAllBorders: false,
-        ),
+      child: Stack(
+        children: <Widget>[
+          _placeCard(),
+          Align(
+            alignment: Alignment.topCenter,
+            child: GestureDetector(
+              onVerticalDragEnd: (details) {
+                if (_scrollController.offset == 0) {
+                  Navigator.pop(context);
+                }
+              },
+              child: Container(
+                color: Colors.transparent,
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.25,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: SvgPicture.asset(
+                        Images.downArrow,
+                        fit: BoxFit.contain,
+                        height: 9,
+                        width: 26,
+                        color: Provider.of<GoColors>(context).cardTextColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _placeCard() {
+    return Hero(
+      tag: widget._place.id,
+      child: PlaceCard(
+        Provider.of<PreferencesService>(context),
+        categoryName: widget._categoryName,
+        place: widget._place,
+        active: true,
+        videoController: widget._videoController,
+        videoControllerInitializeCallback:
+            widget._videoControllerInitializeCallback,
+        showBottomCategoryName: false,
+        showTopCategoryName: false,
+        roundAllBorders: false,
       ),
     );
   }
