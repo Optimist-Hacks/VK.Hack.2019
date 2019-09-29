@@ -138,6 +138,7 @@ class _PlacePageState extends State<PlacePage> {
         showBottomCategoryName: false,
         showTopCategoryName: false,
         roundAllBorders: false,
+        isRealData: true,
       ),
     );
   }

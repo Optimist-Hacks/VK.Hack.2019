@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:built_collection/built_collection.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -84,11 +86,19 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       body: StreamBuilder<BuiltList<Category>>(
         stream: _placeBloc.categoryStream,
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Container();
-          }
+          BuiltList<Category> categories;
 
-          final categories = snapshot.data;
+          bool isRealData;
+
+          if (snapshot.hasError || snapshot.hasData && snapshot.data.isEmpty) {
+            isRealData = false;
+            categories = getStubData();
+          } else if (!snapshot.hasData) {
+            return Container();
+          } else {
+            isRealData = true;
+            categories = snapshot.data;
+          }
 
           for (int y = 0; y < categories.length; y++) {
             nearestCurrentPlaceIndexSubjects[y] ??=
@@ -96,32 +106,34 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             currentPlaceIndexSubjects[y] ??= BehaviorSubject<int>.seeded(0);
           }
 
-          nearestCurrentCategoryIndexSubject.listen((y) async {
-            nearestCurrentPlaceIndexSubjects[y].listen((x) async {
-              final videoUrl = categories[y].places[x].videoUrl;
+          if (isRealData) {
+            nearestCurrentCategoryIndexSubject.listen((y) async {
+              nearestCurrentPlaceIndexSubjects[y].listen((x) async {
+                final videoUrl = categories[y].places[x].videoUrl;
 
-              if (_videoController != null &&
-                  _videoController.dataSource == videoUrl) {
-                Log.d(_tag, "Same video path, reuse controller");
-              } else {
-                Log.d(_tag, "Different video path");
+                if (_videoController != null &&
+                    _videoController.dataSource == videoUrl) {
+                  Log.d(_tag, "Same video path, reuse controller");
+                } else {
+                  Log.d(_tag, "Different video path");
 
-                if (_videoController != null) {
-                  Log.d(_tag, "Dispose previous video controller");
-                  _videoController.dispose();
+                  if (_videoController != null) {
+                    Log.d(_tag, "Dispose previous video controller");
+                    _videoController.dispose();
+                  }
+
+                  _videoController = createVideoPlayerController(videoUrl);
+
+                  _videoControllerInitializeCallback =
+                      _videoController.initialize();
                 }
-
-                _videoController = createVideoPlayerController(videoUrl);
-
-                _videoControllerInitializeCallback =
-                    _videoController.initialize();
-              }
+              });
             });
-          });
+          }
 
           return Stack(
             children: [
-              _verticalCarousel(categories),
+              _verticalCarousel(categories, isRealData),
               _currentCategory(categories),
             ],
           );
@@ -130,7 +142,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _verticalCarousel(BuiltList<Category> categories) {
+  Widget _verticalCarousel(BuiltList<Category> categories, bool isRealData) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
@@ -153,6 +165,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                   y,
                   categories,
                   currentCategoryIndex,
+                  isRealData,
                 );
               }),
       ],
@@ -212,6 +225,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     int y,
     BuiltList<Category> categories,
     int currentCategoryIndex,
+    bool isRealData,
   ) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -264,7 +278,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
               return GestureDetector(
                 onTap: () {
-                  if (active)
+                  if (active && isRealData)
                     _onPlaceTap(categories[y].name, categories[y].places[x]);
                 },
                 child: Padding(
@@ -284,6 +298,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       showTopCategoryName:
                           _getBottomCategoryIndex(categories.length) == y,
                       roundAllBorders: true,
+                      isRealData: isRealData,
                     ),
                   ),
                 ),
@@ -470,4 +485,29 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 //
 //    return File(path);
 //  }
+
+  BuiltList<Category> getStubData() {
+    final rand = Random();
+    final categories = List.generate(3, (i) {
+      final places = List.generate(3, (j) {
+        return Place((b) => b
+          ..id = "id $i,$j"
+          ..price = 100
+          ..temperature = 30
+          ..name = ""
+          ..description = ""
+          ..airport = ""
+          ..videoUrl = rand.nextBool() ? "" : ""
+          ..imageUrl = ""
+          ..flightLink = ""
+          ..date = "");
+      });
+
+      return Category((b) => b
+        ..places = ListBuilder(places)
+        ..name = "No connection");
+    });
+
+    return BuiltList(categories);
+  }
 }

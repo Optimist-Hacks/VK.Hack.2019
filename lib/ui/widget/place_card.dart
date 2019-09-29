@@ -9,9 +9,9 @@ import 'package:go_here/service/preferences_service.dart';
 import 'package:go_here/ui/colors.dart';
 import 'package:go_here/ui/images.dart';
 import 'package:go_here/utils/log.dart';
+import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:video_player/video_player.dart';
-import 'package:provider/provider.dart';
 
 const _tag = "place_card";
 final rand = Random();
@@ -36,6 +36,8 @@ class PlaceCard extends StatefulWidget {
   final bool showTopCategoryName;
   final bool roundAllBorders;
 
+  final bool isRealData;
+
   PlaceCard(
     this._preferencesService, {
     @required this.categoryName,
@@ -46,6 +48,7 @@ class PlaceCard extends StatefulWidget {
     @required this.showBottomCategoryName,
     @required this.showTopCategoryName,
     @required this.roundAllBorders,
+    @required this.isRealData,
     Key key,
   }) : super(key: key);
 
@@ -75,7 +78,9 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
 
     if (widget.videoControllerInitializeCallback != null) {
       widget.videoControllerInitializeCallback.then((_) {
-        setState(() {});
+        if(mounted) {
+          setState(() {});
+        }
       });
     }
   }
@@ -96,6 +101,10 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
     return Scaffold(
       body: GestureDetector(
         onDoubleTap: () {
+          if (!widget.isRealData) {
+            return;
+          }
+
           if (widget._preferencesService.isLiked(widget.place.id)) {
             widget._preferencesService.removeLikedPlace(widget.place.id);
           } else {
@@ -118,15 +127,17 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
           child: Stack(
             fit: StackFit.expand,
             children: <Widget>[
-              _image(),
+              if (widget.isRealData) _image(),
+//              if (!widget.isRealData) _stubImage(),
               if (widget.active &&
-                  (widget.videoController?.value?.initialized ?? false))
+                  (widget.videoController?.value?.initialized ?? false) &&
+                  widget.isRealData)
                 _video(widget.videoController.value.size),
               _gradient(),
-              infoOverlay(),
+              if (widget.isRealData) infoOverlay(),
               if (widget.showBottomCategoryName) bottomCategoryName(),
               if (widget.showTopCategoryName) topCategoryName(),
-              _heartAnimation(),
+              if (widget.isRealData) _heartAnimation(),
             ],
           ),
         ),
@@ -169,6 +180,19 @@ class _PlaceCardState extends State<PlaceCard> with TickerProviderStateMixin {
           : widget._bottomBorderRadius,
       child: CachedNetworkImage(
         imageUrl: widget.place.imageUrl,
+        alignment: Alignment.center,
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+
+  Widget _stubImage() {
+    return ClipRRect(
+      borderRadius: widget.roundAllBorders
+          ? widget._allBorderRadius
+          : widget._bottomBorderRadius,
+      child: Image.asset(
+        "assets/smile.webp",
         alignment: Alignment.center,
         fit: BoxFit.cover,
       ),
