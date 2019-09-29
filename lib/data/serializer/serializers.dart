@@ -2,6 +2,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/serializer.dart';
 import 'package:built_value/standard_json_plugin.dart';
 import 'package:go_here/data/model/category.dart';
+import 'package:go_here/data/model/content_response.dart';
 import 'package:go_here/data/model/place.dart';
 
 part 'serializers.g.dart';
@@ -9,6 +10,7 @@ part 'serializers.g.dart';
 @SerializersFor(const [
   Place,
   Category,
+  ContentResponse,
 ])
 final Serializers serializers =
     (_$serializers.toBuilder()..addPlugin(StandardJsonPlugin())).build();

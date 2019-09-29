@@ -9,6 +9,7 @@ import 'package:go_here/ui/colors.dart';
 import 'package:go_here/ui/page/main_page.dart';
 import 'package:go_here/ui/page/place_page.dart';
 import 'package:go_here/ui/strings.dart';
+import 'package:go_here/ui/page/camera_page.dart';
 import 'package:go_here/utils/log.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
@@ -25,48 +26,48 @@ class App extends StatelessWidget {
     final preferencesService = PreferencesService();
 
     return StreamBuilder<bool>(
-        initialData: preferencesService.currentDartMode(),
-        stream: preferencesService.darkModeSubject,
-        builder: (context, snapshot) {
-          Log.d(_tag, "darkMode = ${snapshot.data}");
-          final goColors = GoColors(snapshot.data);
+      initialData: preferencesService.currentDartMode(),
+      stream: preferencesService.darkModeSubject,
+      builder: (context, snapshot) {
+        Log.d(_tag, "darkMode = ${snapshot.data}");
+        final goColors = GoColors(snapshot.data);
 
-          return MultiProvider(
-            providers: [
-              Provider.value(value: placeBloc),
-              Provider.value(value: aviasalesService),
-              Provider.value(value: preferencesService),
-              Provider.value(value: goColors),
-            ],
-            child: MaterialApp(
-              title: Strings.appName,
-              theme: ThemeData(
-                scaffoldBackgroundColor: goColors.backgroundColor,
-              ),
-              routes: {
-                MainPage.routeName: (context) => MainPage(),
-              },
-              onGenerateRoute: (settings) {
-                switch (settings.name) {
-                  case PlacePage.routeName:
-                    final String categoryName = (settings.arguments as List)[0];
-                    final Place place = (settings.arguments as List)[1];
-                    final VideoPlayerController videoController =
-                        (settings.arguments as List)[2];
-                    final Future<void> videoControllerInitializeCallback =
-                        (settings.arguments as List)[3];
-                    return MaterialPageRoute(
-                        builder: (context) => PlacePage(
-                            categoryName,
-                            place,
-                            videoController,
-                            videoControllerInitializeCallback));
-                }
-                return null;
-              },
-              home: MainPage(),
+        return MultiProvider(
+          providers: [
+            Provider.value(value: placeBloc),
+            Provider.value(value: aviasalesService),
+            Provider.value(value: preferencesService),
+            Provider.value(value: goColors),
+            Provider.value(value: apiService),
+          ],
+          child: MaterialApp(
+            title: Strings.appName,
+            theme: ThemeData(
+              scaffoldBackgroundColor: goColors.backgroundColor,
             ),
-          );
-        });
+            routes: {
+              MainPage.routeName: (context) => MainPage(),
+              CameraPage.routeName: (context) => CameraPage(),
+            },
+            onGenerateRoute: (settings) {
+              switch (settings.name) {
+                case PlacePage.routeName:
+                  final String categoryName = (settings.arguments as List)[0];
+                  final Place place = (settings.arguments as List)[1];
+                  final VideoPlayerController videoController =
+                      (settings.arguments as List)[2];
+                  final Future<void> videoControllerInitializeCallback =
+                      (settings.arguments as List)[3];
+                  return MaterialPageRoute(
+                      builder: (context) => PlacePage(categoryName, place,
+                          videoController, videoControllerInitializeCallback));
+              }
+              return null;
+            },
+            home: MainPage(),
+          ),
+        );
+      },
+    );
   }
 }

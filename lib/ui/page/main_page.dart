@@ -1,4 +1,5 @@
 import 'package:built_collection/built_collection.dart';
+import 'package:camera/camera.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:go_here/data/model/place.dart';
 import 'package:go_here/domain/place_bloc.dart';
 import 'package:go_here/service/preferences_service.dart';
 import 'package:go_here/ui/colors.dart';
+import 'package:go_here/ui/page/camera_page.dart';
 import 'package:go_here/ui/page/place_page.dart';
 import 'package:go_here/ui/widget/place_card.dart';
 import 'package:go_here/utils/log.dart';
@@ -99,14 +101,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   Widget _verticalCarousel(BuiltList<Category> categories) {
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
 
     final categoriesCarousel = CarouselSlider(
       aspectRatio: width / height,
@@ -168,17 +164,13 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     return categoriesCarousel;
   }
 
-  Widget _horizontalCarousel(int y,
-      BuiltList<Category> categories,
-      int currentCategoryIndex,) {
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
+  Widget _horizontalCarousel(
+    int y,
+    BuiltList<Category> categories,
+    int currentCategoryIndex,
+  ) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
 
     currentPlaceIndexSubjects[y] ??= BehaviorSubject<int>.seeded(0);
 
@@ -239,8 +231,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
               return GestureDetector(
                 onTap: () {
-                  if (active)
-                    _onPlaceTap(categories[y].name, categories[y].places[x]);
+                  if (active) _runCamera();
+//                    _onPlaceTap(categories[y].name, categories[y].places[x]);
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -253,11 +245,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       active: active,
                       videoController: active ? _videoController : null,
                       videoControllerInitializeCallback:
-                      active ? _videoControllerInitializeCallback : null,
+                          active ? _videoControllerInitializeCallback : null,
                       showBottomCategoryName:
-                      _getTopCategoryIndex(categories.length) == y,
+                          _getTopCategoryIndex(categories.length) == y,
                       showTopCategoryName:
-                      _getBottomCategoryIndex(categories.length) == y,
+                          _getBottomCategoryIndex(categories.length) == y,
                       roundAllBorders: true,
                     ),
                   ),
@@ -304,7 +296,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
   Widget _currentCategory(BuiltList<Category> categories) {
     final animation =
-    Tween(begin: 0.0, end: 1.0).animate(currentCategoryAnimationController);
+        Tween(begin: 0.0, end: 1.0).animate(currentCategoryAnimationController);
 
     return Align(
       alignment: Alignment.center,
@@ -347,9 +339,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 categoryName.toUpperCase(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Provider
-                      .of<GoColors>(context)
-                      .cardTextColor,
+                  color: Provider.of<GoColors>(context).cardTextColor,
                   fontWeight: FontWeight.w900,
                   fontSize: 72,
                 ),
@@ -411,26 +401,15 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     return bottomIndex;
   }
 
-//  Future<VideoPlayerController> createVideoPlayerController(String url) async {
   VideoPlayerController createVideoPlayerController(String url) {
     Log.d(_tag, "Create video player controller");
-
-//    return VideoPlayerController.file(await getVideoFileForPath(path))
     return VideoPlayerController.network(url)
       ..setVolume(0.0)
       ..setLooping(true);
   }
 
-//  Future<File> getVideoFileForPath(String uri) async {
-//    final taskId = await FlutterDownloader.enqueue(
-//      url: 'your download link',
-//      savedDir: 'the path of directory where you want to save downloaded files',
-//      showNotification: true,
-//      // show download progress in status bar (for Android)
-//      openFileFromNotification:
-//          true, // click on notification to open downloaded file (for Android)
-//    );
-//
-//    return File(path);
-//  }
+  void _runCamera() async {
+    Log.d(_tag, "run camera");
+    Navigator.pushNamed(context, CameraPage.routeName);
+  }
 }

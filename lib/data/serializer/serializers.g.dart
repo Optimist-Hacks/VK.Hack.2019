@@ -8,6 +8,7 @@ part of 'serializers.dart';
 
 Serializers _$serializers = (new Serializers().toBuilder()
       ..add(Category.serializer)
+      ..add(ContentResponse.serializer)
       ..add(Place.serializer)
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Place)]),
